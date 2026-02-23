@@ -1,0 +1,124 @@
+"use client";
+import { Document, Page, Text, View, StyleSheet, Image } from "@react-pdf/renderer";
+
+// Alturas calculadas al aspect-ratio exacto (page width = 612pt)
+// header.jpeg:     1122×134  → 73pt
+// firma.jpeg:      1280×512  → 245pt
+// footer-wave.jpeg: 1241×342 → 169pt
+
+const s = StyleSheet.create({
+  page: {
+    paddingTop: 0, paddingBottom: 0, paddingHorizontal: 0,
+    fontSize: 11, fontFamily: "Helvetica", lineHeight: 1.6,
+    color: "#000", backgroundColor: "#ffffff",
+  },
+  imgBox: { width: "100%", backgroundColor: "#ffffff" },
+  headerImg: { width: "100%", height: 73,  objectFit: "fill" },
+  firmaImg:  { width: "100%", height: 245, objectFit: "fill" },
+  footerImg: { width: "100%", height: 169, objectFit: "fill" },
+
+  body: { paddingHorizontal: 52, paddingTop: 18 },
+
+  // Título
+  titulo: {
+    textAlign: "center", fontSize: 13, fontFamily: "Helvetica-Bold",
+    textDecoration: "underline", textTransform: "uppercase",
+    letterSpacing: 0.5, marginBottom: 14,
+  },
+  // Párrafos
+  p: { textAlign: "justify", marginBottom: 10, fontSize: 11 },
+  bold: { fontFamily: "Helvetica-Bold" },
+  boldUnder: { fontFamily: "Helvetica-Bold", textDecoration: "underline" },
+  // "HACE CONSTAR"
+  haceConstar: {
+    textAlign: "center", fontSize: 11, fontFamily: "Helvetica-Bold",
+    marginBottom: 10,
+  },
+});
+
+interface Props {
+  // Empleado
+  nombre: string;
+  cedula: string;
+  tipoPersonal: string;
+  codigoRac: string;
+  ubicacion: string;
+  codigoDependencia: string;
+  fechaIngreso: string;     // "DD/MM/YYYY"
+  horasAcademicas: number;
+  // Fecha constancia en letras
+  diaPalabra: string;       // "ONCE"
+  mesPalabra: string;       // "DICIEMBRE"
+  anio: string;             // "2025"
+  // Tramite
+  tramite: string;
+  // Imágenes
+  baseUrl: string;
+}
+
+export default function ConstanciaDoc({
+  nombre, cedula, tipoPersonal, codigoRac,
+  ubicacion, codigoDependencia, fechaIngreso, horasAcademicas,
+  diaPalabra, mesPalabra, anio, tramite, baseUrl,
+}: Props) {
+  return (
+    <Document>
+      <Page size="LETTER" style={s.page}>
+
+        {/* ── HEADER ── */}
+        <View style={s.imgBox}>
+          <Image src={`${baseUrl}/logos/header.jpeg`} style={s.headerImg} />
+        </View>
+
+        {/* ── CUERPO ── */}
+        <View style={s.body}>
+          <Text style={s.titulo}>Constancia de Prestación de Servicio</Text>
+
+          {/* Párrafo 1 — director */}
+          <Text style={s.p}>
+            {"        "}Quien suscribe, <Text style={s.bold}>LCDA. MAYELA COROMOTO MÁRQUEZ ALARCÓN</Text>, portadora de la Cédula de Identidad{" "}
+            <Text style={s.bold}>N° V- 8.707.544</Text>, Directora (E){" "}
+            <Text style={s.bold}>SEGÚN CREDENCIAL DE FECHA: 16/09/2024</Text>, Directora Encargada de la Escuela "María Yolanda Pernía", con sede en la Urb. San José Parroquia El Llano Tovar Estado Mérida. Código Administrativo:{" "}
+            <Text style={s.boldUnder}>006561453</Text>, Código Plantel:{" "}
+            <Text style={s.boldUnder}>S2959D1421</Text>, Código Estadístico{" "}
+            <Text style={s.boldUnder}>140917</Text>.
+          </Text>
+
+          <Text style={s.haceConstar}>HACE CONSTAR</Text>
+
+          {/* Párrafo 2 — empleado (dinámico) */}
+          <Text style={s.p}>
+            {"        "}Que el (la) ciudadano (a):{" "}
+            <Text style={s.bold}>{nombre.toUpperCase()}</Text>, titular de la Cédula de Identidad Número:{" "}
+            <Text style={s.bold}>V- {cedula}</Text>, actualmente se desempeña como:{" "}
+            <Text style={s.bold}>{tipoPersonal}</Text>,{" "}
+            <Text style={s.bold}>Código Número: {codigoRac}</Text>, adscrito(a) a la dependencia:{" "}
+            <Text style={s.bold}>{ubicacion}</Text>,{" "}
+            <Text style={s.bold}>Código Número: {codigoDependencia || "006561453"}</Text>, con fecha de Ingreso:{" "}
+            <Text style={s.bold}>{fechaIngreso}</Text>, hasta la presente fecha, cumpliendo una carga horaria de{" "}
+            <Text style={s.bold}>{horasAcademicas} horas académicas</Text>. Constancia emitida para {tramite}.
+          </Text>
+
+          {/* Fecha en letras */}
+          <Text style={s.p}>
+            {"        "}En <Text style={s.boldUnder}>TOVAR</Text> a los{" "}
+            <Text style={s.boldUnder}>{diaPalabra}</Text> días del mes de{" "}
+            <Text style={s.boldUnder}>{mesPalabra}</Text> de{" "}
+            <Text style={s.boldUnder}>{anio}.</Text>
+          </Text>
+        </View>
+
+        {/* ── FIRMA ── */}
+        <View style={s.imgBox}>
+          <Image src={`${baseUrl}/logos/firma.jpeg`} style={s.firmaImg} />
+        </View>
+
+        {/* ── FOOTER OLAS ── */}
+        <View style={s.imgBox}>
+          <Image src={`${baseUrl}/logos/footer-wave.jpeg`} style={s.footerImg} />
+        </View>
+
+      </Page>
+    </Document>
+  );
+}

@@ -1,10 +1,14 @@
 "use client";
 
 import { useState } from "react";
+import { fechaEnLetras } from "@/lib/fechaEnLetras";
 
 type TipoConstancia = "zona" | "ivss" | "banco";
 
-interface Empleado { nombre: string; cedula: string; cargo: string; fecha_ingreso: string; ubicacion: string; }
+interface Empleado {
+  nombre: string; cedula: string; cargo: string; fecha_ingreso: string; ubicacion: string;
+  tipo_personal: string; codigo_rac: string; codigo_dependencia: string; horas_academicas: number;
+}
 interface Config   { director_nombre: string; director_cargo: string; institucion: string; }
 
 const TIPOS = [
@@ -13,11 +17,6 @@ const TIPOS = [
   { id: "banco" as TipoConstancia, label: "Entidad Bancaria",              icon: "🏦", tramite: "",                           from: "from-violet-600", to: "to-purple-600",  ring: "focus:ring-violet-400", btn: "from-violet-600 to-purple-600 hover:from-violet-500 hover:to-purple-500", badge: "bg-violet-100 text-violet-700"   },
 ];
 
-function formatDate(dateStr: string) {
-  const months = ["enero","febrero","marzo","abril","mayo","junio","julio","agosto","septiembre","octubre","noviembre","diciembre"];
-  const d = new Date(dateStr + "T12:00:00");
-  return `${d.getDate()} de ${months[d.getMonth()]} de ${d.getFullYear()}`;
-}
 
 export default function Home() {
   const [tipo,       setTipo]       = useState<TipoConstancia>("zona");
@@ -63,22 +62,29 @@ export default function Home() {
     if (!empleado || !config) return;
     setPdfLoading(true); setPdfUrl(null);
     try {
-      const hoy          = formatDate(new Date().toISOString().split("T")[0]);
-      const fechaIngreso = formatDate(empleado.fecha_ingreso);
-      const { pdf }      = await import("@react-pdf/renderer");
-      const baseUrl      = window.location.origin;
+      const hoyIso = new Date().toISOString().split("T")[0];
+      const { dia: diaPalabra, mes: mesPalabra, anio } = fechaEnLetras(hoyIso);
+      const { pdf } = await import("@react-pdf/renderer");
+      const baseUrl = window.location.origin;
 
-      let docElement;
-      if (tipo === "zona") {
-        const { default: Comp } = await import("@/components/ConstanciaZonaEducativa");
-        docElement = <Comp nombre={empleado.nombre} cedula={empleado.cedula} cargo={empleado.cargo} fechaIngreso={fechaIngreso} ubicacion={empleado.ubicacion} directorNombre={config.director_nombre} directorCargo={config.director_cargo} tramite={tramite} hoy={hoy} baseUrl={baseUrl} />;
-      } else if (tipo === "ivss") {
-        const { default: Comp } = await import("@/components/ConstanciaIVSS");
-        docElement = <Comp nombre={empleado.nombre} cedula={empleado.cedula} cargo={empleado.cargo} fechaIngreso={fechaIngreso} ubicacion={empleado.ubicacion} directorNombre={config.director_nombre} directorCargo={config.director_cargo} tramite={tramite} hoy={hoy} baseUrl={baseUrl} />;
-      } else {
-        const { default: Comp } = await import("@/components/ConstanciaBanco");
-        docElement = <Comp nombre={empleado.nombre} cedula={empleado.cedula} cargo={empleado.cargo} fechaIngreso={fechaIngreso} ubicacion={empleado.ubicacion} directorNombre={config.director_nombre} directorCargo={config.director_cargo} entidadBancaria={entidad} tramite={tramite} hoy={hoy} baseUrl={baseUrl} />;
-      }
+      const { default: Comp } = await import("@/components/ConstanciaDoc");
+      const docElement = (
+        <Comp
+          nombre={empleado.nombre}
+          cedula={empleado.cedula}
+          tipoPersonal={empleado.tipo_personal}
+          codigoRac={empleado.codigo_rac}
+          ubicacion={empleado.ubicacion}
+          codigoDependencia={empleado.codigo_dependencia}
+          fechaIngreso={empleado.fecha_ingreso}
+          horasAcademicas={empleado.horas_academicas}
+          diaPalabra={diaPalabra}
+          mesPalabra={mesPalabra}
+          anio={anio}
+          tramite={tramite}
+          baseUrl={baseUrl}
+        />
+      );
 
       const blob = await pdf(docElement).toBlob();
       setPdfUrl(URL.createObjectURL(blob));
@@ -218,7 +224,7 @@ export default function Home() {
                 ["Cédula",      `V-${empleado.cedula}`],
                 ["Cargo",       empleado.cargo],
                 ["Institución", empleado.ubicacion],
-                ["Ingreso",     formatDate(empleado.fecha_ingreso)],
+                ["Ingreso",     empleado.fecha_ingreso],
               ] as [string, string][]).map(([label, value], i) => (
                 <div key={label} className="animate-fade-in-up flex gap-3 text-sm" style={{ animationDelay: `${i * 60}ms` }}>
                   <span className="text-white/40 w-24 shrink-0">{label}</span>

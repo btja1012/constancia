@@ -5,23 +5,23 @@ export async function POST(req: NextRequest) {
   const { cedula, nacimiento } = await req.json();
 
   if (!cedula || !nacimiento) {
-    return NextResponse.json(
-      { error: "Cédula y fecha de nacimiento son requeridos" },
-      { status: 400 }
-    );
+    return NextResponse.json({ error: "Cédula y fecha de nacimiento son requeridos" }, { status: 400 });
   }
 
-  // Cast explícito a date para evitar problemas de zona horaria con el driver HTTP de Neon
   const empleados = await sql`
     SELECT
       nombre,
       cedula,
       cargo,
-      TO_CHAR(fecha_ingreso, 'YYYY-MM-DD') AS fecha_ingreso,
-      ubicacion
+      tipo_personal,
+      codigo_rac,
+      TO_CHAR(fecha_ingreso, 'DD/MM/YYYY') AS fecha_ingreso,
+      ubicacion,
+      codigo_dependencia,
+      horas_academicas
     FROM empleados
-    WHERE cedula = ${cedula.trim()}
-    AND nacimiento::date = ${nacimiento}::date
+    WHERE cedula        = ${cedula.trim()}
+    AND   nacimiento::date = ${nacimiento}::date
   `;
 
   if (empleados.length === 0) {
@@ -33,8 +33,5 @@ export async function POST(req: NextRequest) {
 
   const config = await sql`SELECT * FROM configuracion LIMIT 1`;
 
-  return NextResponse.json({
-    empleado: empleados[0],
-    config: config[0],
-  });
+  return NextResponse.json({ empleado: empleados[0], config: config[0] });
 }
