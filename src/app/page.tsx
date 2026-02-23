@@ -8,9 +8,9 @@ interface Empleado { nombre: string; cedula: string; cargo: string; fecha_ingres
 interface Config   { director_nombre: string; director_cargo: string; institucion: string; }
 
 const TIPOS = [
-  { id: "zona"  as TipoConstancia, label: "Zona Educativa N°14", sub: "Mérida",        icon: "🎓", from: "from-blue-600",    to: "to-indigo-600",  ring: "focus:ring-blue-400",    btn: "from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500",       badge: "bg-blue-100 text-blue-700"       },
-  { id: "ivss"  as TipoConstancia, label: "IVSS",                sub: "Mérida",        icon: "🏥", from: "from-emerald-600", to: "to-teal-600",    ring: "focus:ring-emerald-400", btn: "from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500",   badge: "bg-emerald-100 text-emerald-700" },
-  { id: "banco" as TipoConstancia, label: "Entidad Bancaria",    sub: "Carta al banco", icon: "🏦", from: "from-violet-600", to: "to-purple-600",  ring: "focus:ring-violet-400",  btn: "from-violet-600 to-purple-600 hover:from-violet-500 hover:to-purple-500", badge: "bg-violet-100 text-violet-700"   },
+  { id: "zona"  as TipoConstancia, label: "Zona Educativa N°14 — Mérida", icon: "🎓", tramite: "Zona Educativa N°14 Mérida", from: "from-blue-600",    to: "to-indigo-600",  ring: "focus:ring-blue-400",   btn: "from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500",       badge: "bg-blue-100 text-blue-700"       },
+  { id: "ivss"  as TipoConstancia, label: "IVSS — Mérida",                icon: "🏥", tramite: "IVSS Mérida",                from: "from-emerald-600", to: "to-teal-600",    ring: "focus:ring-emerald-400",btn: "from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500",   badge: "bg-emerald-100 text-emerald-700" },
+  { id: "banco" as TipoConstancia, label: "Entidad Bancaria",              icon: "🏦", tramite: "",                           from: "from-violet-600", to: "to-purple-600",  ring: "focus:ring-violet-400", btn: "from-violet-600 to-purple-600 hover:from-violet-500 hover:to-purple-500", badge: "bg-violet-100 text-violet-700"   },
 ];
 
 function formatDate(dateStr: string) {
@@ -23,7 +23,6 @@ export default function Home() {
   const [tipo,       setTipo]       = useState<TipoConstancia>("zona");
   const [cedula,     setCedula]     = useState("");
   const [nacimiento, setNacimiento] = useState("");
-  const [tramite,    setTramite]    = useState("Fines Legales");
   const [entidad,    setEntidad]    = useState("");
   const [empleado,   setEmpleado]   = useState<Empleado | null>(null);
   const [config,     setConfig]     = useState<Config | null>(null);
@@ -33,6 +32,15 @@ export default function Home() {
   const [pdfUrl,     setPdfUrl]     = useState<string | null>(null);
 
   const t = TIPOS.find((x) => x.id === tipo)!;
+  // El tramite es el tipo de constancia; para banco es el nombre del banco
+  const tramite = tipo === "banco" ? (entidad || "Entidad Bancaria") : t.tramite;
+
+  const handleTipo = (val: string) => {
+    setTipo(val as TipoConstancia);
+    setEmpleado(null);
+    setError("");
+    setPdfUrl(null);
+  };
 
   const buscar = async () => {
     setError(""); setEmpleado(null); setPdfUrl(null);
@@ -53,26 +61,23 @@ export default function Home() {
 
   const generarPDF = async () => {
     if (!empleado || !config) return;
-    setPdfLoading(true);
-    setPdfUrl(null);
+    setPdfLoading(true); setPdfUrl(null);
     try {
       const hoy          = formatDate(new Date().toISOString().split("T")[0]);
       const fechaIngreso = formatDate(empleado.fecha_ingreso);
-
-      // Carga lazy total — evita error "re is not a function" en SSR/hidratación
-      const { pdf } = await import("@react-pdf/renderer");
-      const baseUrl = window.location.origin;
+      const { pdf }      = await import("@react-pdf/renderer");
+      const baseUrl      = window.location.origin;
 
       let docElement;
       if (tipo === "zona") {
         const { default: Comp } = await import("@/components/ConstanciaZonaEducativa");
-        docElement = <Comp nombre={empleado.nombre} cedula={empleado.cedula} cargo={empleado.cargo} fechaIngreso={fechaIngreso} ubicacion={empleado.ubicacion} directorNombre={config.director_nombre} directorCargo={config.director_cargo} tramite={tramite || "Fines Legales"} hoy={hoy} baseUrl={baseUrl} />;
+        docElement = <Comp nombre={empleado.nombre} cedula={empleado.cedula} cargo={empleado.cargo} fechaIngreso={fechaIngreso} ubicacion={empleado.ubicacion} directorNombre={config.director_nombre} directorCargo={config.director_cargo} tramite={tramite} hoy={hoy} baseUrl={baseUrl} />;
       } else if (tipo === "ivss") {
         const { default: Comp } = await import("@/components/ConstanciaIVSS");
-        docElement = <Comp nombre={empleado.nombre} cedula={empleado.cedula} cargo={empleado.cargo} fechaIngreso={fechaIngreso} ubicacion={empleado.ubicacion} directorNombre={config.director_nombre} directorCargo={config.director_cargo} tramite={tramite || "Trámite IVSS"} hoy={hoy} baseUrl={baseUrl} />;
+        docElement = <Comp nombre={empleado.nombre} cedula={empleado.cedula} cargo={empleado.cargo} fechaIngreso={fechaIngreso} ubicacion={empleado.ubicacion} directorNombre={config.director_nombre} directorCargo={config.director_cargo} tramite={tramite} hoy={hoy} baseUrl={baseUrl} />;
       } else {
         const { default: Comp } = await import("@/components/ConstanciaBanco");
-        docElement = <Comp nombre={empleado.nombre} cedula={empleado.cedula} cargo={empleado.cargo} fechaIngreso={fechaIngreso} ubicacion={empleado.ubicacion} directorNombre={config.director_nombre} directorCargo={config.director_cargo} entidadBancaria={entidad} tramite={tramite || "Trámite bancario"} hoy={hoy} baseUrl={baseUrl} />;
+        docElement = <Comp nombre={empleado.nombre} cedula={empleado.cedula} cargo={empleado.cargo} fechaIngreso={fechaIngreso} ubicacion={empleado.ubicacion} directorNombre={config.director_nombre} directorCargo={config.director_cargo} entidadBancaria={entidad} tramite={tramite} hoy={hoy} baseUrl={baseUrl} />;
       }
 
       const blob = await pdf(docElement).toBlob();
@@ -80,15 +85,13 @@ export default function Home() {
     } catch (e) {
       console.error("Error generando PDF:", e);
       setError("No se pudo generar el PDF. Intenta de nuevo.");
-    } finally {
-      setPdfLoading(false);
-    }
+    } finally { setPdfLoading(false); }
   };
 
   const descargar = () => {
     if (!pdfUrl || !empleado) return;
-    const a    = document.createElement("a");
-    a.href     = pdfUrl;
+    const a = document.createElement("a");
+    a.href = pdfUrl;
     a.download = `Constancia_${tipo.toUpperCase()}_${empleado.cedula}.pdf`;
     a.click();
   };
@@ -113,57 +116,72 @@ export default function Home() {
           <p className="text-white/40 text-sm mt-1">CDCE Tovar · Sistema de Documentos</p>
         </div>
 
-        {/* Selector tipo */}
-        <div className="animate-fade-in-up delay-100 bg-white/[0.05] backdrop-blur-sm border border-white/10 rounded-2xl p-4">
-          <p className="text-xs font-semibold text-white/30 uppercase tracking-widest mb-3">Tipo de constancia</p>
-          <div className="grid grid-cols-3 gap-2">
-            {TIPOS.map((opt) => (
-              <button key={opt.id}
-                onClick={() => { setTipo(opt.id); setEmpleado(null); setError(""); setPdfUrl(null); }}
-                className={`flex flex-col items-center gap-1 px-2 py-3 rounded-xl text-xs font-semibold transition-all duration-300 ${
-                  tipo === opt.id
-                    ? `bg-gradient-to-br ${opt.from} ${opt.to} text-white shadow-lg scale-[1.03] pill-active`
-                    : "text-white/50 hover:text-white/80 hover:bg-white/[0.07]"
-                }`}>
-                <span className="text-xl">{opt.icon}</span>
-                <span className="leading-tight text-center">{opt.label}</span>
-                <span className="text-[10px] opacity-70">{opt.sub}</span>
-              </button>
-            ))}
-          </div>
-        </div>
-
         {/* Formulario */}
-        <div className="animate-fade-in-up delay-200 bg-white/[0.05] backdrop-blur-sm border border-white/10 rounded-2xl p-5 space-y-4">
-          <p className="text-xs font-semibold text-white/30 uppercase tracking-widest">Verificar empleado</p>
-          <div className="space-y-3">
-            <div>
-              <label className="block text-sm font-medium text-white/70 mb-1.5">Cédula de Identidad</label>
-              <input type="text" value={cedula} onChange={(e) => setCedula(e.target.value)}
-                onKeyDown={(e) => e.key === "Enter" && buscar()} placeholder="Ej: 8707544"
-                className={`w-full px-4 py-2.5 rounded-xl bg-white/[0.08] border border-white/10 text-white placeholder-white/20 focus:outline-none focus:ring-2 ${t.ring} focus:border-transparent transition`} />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-white/70 mb-1.5">Fecha de Nacimiento</label>
-              <input type="date" value={nacimiento} onChange={(e) => setNacimiento(e.target.value)}
-                className={`w-full px-4 py-2.5 rounded-xl bg-white/[0.08] border border-white/10 text-white/80 focus:outline-none focus:ring-2 ${t.ring} focus:border-transparent transition [color-scheme:dark]`} />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-white/70 mb-1.5">Motivo del Trámite</label>
-              <input type="text" value={tramite} onChange={(e) => setTramite(e.target.value)}
-                placeholder="Fines Legales"
-                className={`w-full px-4 py-2.5 rounded-xl bg-white/[0.08] border border-white/10 text-white placeholder-white/20 focus:outline-none focus:ring-2 ${t.ring} focus:border-transparent transition`} />
-            </div>
-            {tipo === "banco" && (
-              <div className="animate-slide-up">
-                <label className="block text-sm font-medium text-white/70 mb-1.5">Nombre del Banco</label>
-                <input type="text" value={entidad} onChange={(e) => setEntidad(e.target.value)}
-                  placeholder="Ej: Banco de Venezuela"
-                  className={`w-full px-4 py-2.5 rounded-xl bg-white/[0.08] border border-white/10 text-white placeholder-white/20 focus:outline-none focus:ring-2 ${t.ring} focus:border-transparent transition`} />
-              </div>
-            )}
+        <div className="animate-fade-in-up delay-100 bg-white/[0.05] backdrop-blur-sm border border-white/10 rounded-2xl p-5 space-y-4">
+
+          {/* Cédula */}
+          <div>
+            <label className="block text-sm font-medium text-white/70 mb-1.5">Cédula de Identidad</label>
+            <input
+              type="text"
+              value={cedula}
+              onChange={(e) => setCedula(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && buscar()}
+              placeholder="Ej: 8707544"
+              className={`w-full px-4 py-2.5 rounded-xl bg-white/[0.08] border border-white/10 text-white placeholder-white/20 focus:outline-none focus:ring-2 ${t.ring} focus:border-transparent transition`}
+            />
           </div>
 
+          {/* Fecha de nacimiento */}
+          <div>
+            <label className="block text-sm font-medium text-white/70 mb-1.5">Fecha de Nacimiento</label>
+            <input
+              type="date"
+              value={nacimiento}
+              onChange={(e) => setNacimiento(e.target.value)}
+              className={`w-full px-4 py-2.5 rounded-xl bg-white/[0.08] border border-white/10 text-white/80 focus:outline-none focus:ring-2 ${t.ring} focus:border-transparent transition [color-scheme:dark]`}
+            />
+          </div>
+
+          {/* Dropdown tipo / motivo */}
+          <div>
+            <label className="block text-sm font-medium text-white/70 mb-1.5">Motivo del Trámite</label>
+            <div className="relative">
+              <select
+                value={tipo}
+                onChange={(e) => handleTipo(e.target.value)}
+                className={`w-full appearance-none px-4 py-2.5 pr-10 rounded-xl bg-white/[0.08] border border-white/10 text-white focus:outline-none focus:ring-2 ${t.ring} focus:border-transparent transition cursor-pointer [color-scheme:dark]`}
+              >
+                {TIPOS.map((opt) => (
+                  <option key={opt.id} value={opt.id}>
+                    {opt.icon}  {opt.label}
+                  </option>
+                ))}
+              </select>
+              {/* Chevron custom */}
+              <div className="pointer-events-none absolute inset-y-0 right-3 flex items-center">
+                <svg className="w-4 h-4 text-white/40" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          {/* Campo banco — solo si es tipo banco */}
+          {tipo === "banco" && (
+            <div className="animate-slide-up">
+              <label className="block text-sm font-medium text-white/70 mb-1.5">Nombre del Banco</label>
+              <input
+                type="text"
+                value={entidad}
+                onChange={(e) => setEntidad(e.target.value)}
+                placeholder="Ej: Banco de Venezuela"
+                className={`w-full px-4 py-2.5 rounded-xl bg-white/[0.08] border border-white/10 text-white placeholder-white/20 focus:outline-none focus:ring-2 ${t.ring} focus:border-transparent transition`}
+              />
+            </div>
+          )}
+
+          {/* Error */}
           {error && (
             <div className="animate-slide-up flex items-center gap-2 bg-red-500/10 border border-red-500/20 text-red-400 rounded-xl px-4 py-3 text-sm">
               <svg className="w-4 h-4 shrink-0" fill="currentColor" viewBox="0 0 20 20">
@@ -173,11 +191,16 @@ export default function Home() {
             </div>
           )}
 
-          <button onClick={buscar} disabled={loading}
-            className={`w-full bg-gradient-to-r ${t.btn} disabled:opacity-40 text-white font-semibold py-3 rounded-xl transition-all duration-300 shadow-lg flex items-center justify-center gap-2`}>
+          {/* Botón buscar */}
+          <button
+            onClick={buscar}
+            disabled={loading}
+            className={`w-full bg-gradient-to-r ${t.btn} disabled:opacity-40 text-white font-semibold py-3 rounded-xl transition-all duration-300 shadow-lg flex items-center justify-center gap-2`}
+          >
             {loading
               ? <><svg className="spinner w-4 h-4" viewBox="0 0 24 24" fill="none"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"/></svg>Buscando...</>
-              : <><span>Buscar Empleado</span><span className="opacity-70">→</span></>}
+              : <><span>Buscar Empleado</span><span className="opacity-70">→</span></>
+            }
           </button>
         </div>
 
@@ -186,13 +209,13 @@ export default function Home() {
           <div className="animate-slide-up animate-glow-pulse bg-white/[0.06] backdrop-blur-sm border border-white/10 rounded-2xl p-5 space-y-4">
             <div className="flex items-center justify-between">
               <p className="text-xs font-semibold text-white/30 uppercase tracking-widest">Empleado encontrado</p>
-              <span className={`text-xs font-semibold px-2.5 py-1 rounded-full ${t.badge}`}>{t.icon} {t.label}</span>
+              <span className={`text-xs font-semibold px-2.5 py-1 rounded-full ${t.badge}`}>{t.icon} {t.id === "banco" ? entidad || "Banco" : t.label.split("—")[0].trim()}</span>
             </div>
 
             <div className="space-y-2 rounded-xl bg-white/[0.04] border border-white/[0.07] p-4">
               {([
                 ["Nombre",      empleado.nombre],
-                ["Cédula",      empleado.cedula],
+                ["Cédula",      `V-${empleado.cedula}`],
                 ["Cargo",       empleado.cargo],
                 ["Institución", empleado.ubicacion],
                 ["Ingreso",     formatDate(empleado.fecha_ingreso)],
@@ -210,14 +233,15 @@ export default function Home() {
                 className={`w-full bg-gradient-to-r ${t.btn} disabled:opacity-40 text-white font-semibold py-3 rounded-xl transition-all duration-300 shadow-lg flex items-center justify-center gap-2`}>
                 {pdfLoading
                   ? <><svg className="spinner w-4 h-4" viewBox="0 0 24 24" fill="none"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"/></svg>Generando constancia...</>
-                  : <><svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>Generar Constancia PDF</>}
+                  : <><svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>Generar Constancia PDF</>
+                }
               </button>
             )}
 
             {/* Paso 2: Ver + Descargar */}
             {pdfUrl && (
               <div className="animate-slide-up space-y-2">
-                <p className="text-xs text-center text-white/30 pb-1">✓ Constancia lista</p>
+                <p className="text-xs text-center text-emerald-400/80 pb-1">✓ Constancia lista</p>
                 <div className="grid grid-cols-2 gap-2">
                   <button onClick={() => window.open(pdfUrl, "_blank")}
                     className="flex items-center justify-center gap-2 bg-white/10 hover:bg-white/20 text-white font-semibold py-3 rounded-xl transition border border-white/10 text-sm">
@@ -235,7 +259,7 @@ export default function Home() {
                     Descargar
                   </button>
                 </div>
-                <button onClick={() => { setPdfUrl(null); }}
+                <button onClick={() => setPdfUrl(null)}
                   className="w-full text-white/30 hover:text-white/50 text-xs py-1 transition">
                   Regenerar constancia
                 </button>
