@@ -2,9 +2,8 @@
 import { Document, Page, Text, View, StyleSheet, Image } from "@react-pdf/renderer";
 
 // LETTER = 612 × 792 pt. Heights = (imgH / imgW) × 612
-// header.png:       1122×130  → 71pt  (cropped black top border)
-// firma.png:        1280×497  → 238pt (cropped black bottom border)
-// footer-wave.png:  1241×342  → 169pt
+// header.png:       1122×159 → 87pt
+// footer-wave.png:  1241×342 → 169pt
 
 const PW = 612; // page width in pt
 
@@ -16,7 +15,6 @@ const s = StyleSheet.create({
   },
   imgBox: { width: PW, backgroundColor: "#ffffff" },
   headerImg: { width: PW, height: 87,  backgroundColor: "#ffffff" },
-  firmaImg:  { width: PW, height: 160, backgroundColor: "#ffffff" },
   footerImg: { width: PW, height: 169, backgroundColor: "#ffffff" },
 
   body: { paddingHorizontal: 52, paddingTop: 18 },
@@ -36,6 +34,12 @@ const s = StyleSheet.create({
     textAlign: "center", fontSize: 11, fontFamily: "Helvetica-Bold",
     marginBottom: 10,
   },
+  // Firma como texto
+  firmaBox: { paddingHorizontal: 52, paddingTop: 10, paddingBottom: 10 },
+  firmaAtente: { fontSize: 11, textAlign: "center", marginBottom: 36 },
+  firmaNombre: { fontSize: 11, fontFamily: "Helvetica-Bold", textAlign: "center" },
+  firmaInfo:   { fontSize: 11, textAlign: "center" },
+  firmaSello:  { fontSize: 11, fontFamily: "Helvetica-Bold", textAlign: "center", marginTop: 4 },
 });
 
 interface Props {
@@ -120,9 +124,14 @@ export default function ConstanciaDoc({
           </Text>
         </View>
 
-        {/* ── FIRMA ── */}
-        <View style={s.imgBox}>
-          <Image src={`${baseUrl}/logos/firma.png`} style={s.firmaImg} />
+        {/* ── FIRMA (texto) ── */}
+        <View style={s.firmaBox}>
+          <Text style={s.firmaAtente}>Atentamente:</Text>
+          <Text style={s.firmaNombre}>Lcda. Mayela Coromoto Márquez Alarcón (Esp.)</Text>
+          <Text style={s.firmaInfo}>Directora (E) de la Escuela "María Yolanda Pernía"</Text>
+          <Text style={s.firmaInfo}>Según credencial, emitida por la DZE.</Text>
+          <Text style={s.firmaInfo}>De fecha 16/09/2024.EMYP/AMSDE/mgc.</Text>
+          <Text style={s.firmaSello}>SELLO</Text>
         </View>
 
         {/* ── FOOTER OLAS ── */}
