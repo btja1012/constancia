@@ -1,10 +1,12 @@
 "use client";
 import { Document, Page, Text, View, StyleSheet, Image } from "@react-pdf/renderer";
 
-// Alturas calculadas al aspect-ratio exacto (page width = 612pt)
-// header.jpeg:     1122×134  → 73pt
-// firma.jpeg:      1280×512  → 245pt
-// footer-wave.jpeg: 1241×342 → 169pt
+// LETTER = 612 × 792 pt. Heights = (imgH / imgW) × 612
+// header.jpeg:      1122×134  → 73pt
+// firma.jpeg:       1280×512  → 245pt
+// footer-wave.jpeg: 1241×342  → 169pt
+
+const PW = 612; // page width in pt
 
 const s = StyleSheet.create({
   page: {
@@ -12,10 +14,10 @@ const s = StyleSheet.create({
     fontSize: 11, fontFamily: "Helvetica", lineHeight: 1.6,
     color: "#000", backgroundColor: "#ffffff",
   },
-  imgBox: { width: "100%", backgroundColor: "#ffffff" },
-  headerImg: { width: "100%", height: 73,  objectFit: "fill" },
-  firmaImg:  { width: "100%", height: 245, objectFit: "fill" },
-  footerImg: { width: "100%", height: 169, objectFit: "fill" },
+  imgBox: { width: PW, backgroundColor: "#ffffff" },
+  headerImg: { width: PW, height: 73,  backgroundColor: "#ffffff" },
+  firmaImg:  { width: PW, height: 245, backgroundColor: "#ffffff" },
+  footerImg: { width: PW, height: 169, backgroundColor: "#ffffff" },
 
   body: { paddingHorizontal: 52, paddingTop: 18 },
 

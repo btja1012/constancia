@@ -7,10 +7,10 @@ const s = StyleSheet.create({
     fontSize: 10.5, fontFamily: "Helvetica", lineHeight: 1.55,
     color: "#111", backgroundColor: "#ffffff",
   },
-  imgBox: { width: "100%", backgroundColor: "#ffffff" },
-  headerImg: { width: "100%", height: 73,  objectFit: "fill" },
-  firmaImg:  { width: "100%", height: 245, objectFit: "fill" },
-  footerImg: { width: "100%", height: 169, objectFit: "fill" },
+  imgBox: { width: 612, backgroundColor: "#ffffff" },
+  headerImg: { width: 612, height: 73,  backgroundColor: "#ffffff" },
+  firmaImg:  { width: 612, height: 245, backgroundColor: "#ffffff" },
+  footerImg: { width: 612, height: 169, backgroundColor: "#ffffff" },
 
   content: { paddingHorizontal: 48, paddingTop: 16 },
   titulo: {
