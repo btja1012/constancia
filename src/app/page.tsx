@@ -61,17 +61,18 @@ export default function Home() {
 
       // Carga lazy total — evita error "re is not a function" en SSR/hidratación
       const { pdf } = await import("@react-pdf/renderer");
+      const baseUrl = window.location.origin;
 
       let docElement;
       if (tipo === "zona") {
         const { default: Comp } = await import("@/components/ConstanciaZonaEducativa");
-        docElement = <Comp nombre={empleado.nombre} cedula={empleado.cedula} cargo={empleado.cargo} fechaIngreso={fechaIngreso} ubicacion={empleado.ubicacion} directorNombre={config.director_nombre} directorCargo={config.director_cargo} tramite={tramite || "Fines Legales"} hoy={hoy} />;
+        docElement = <Comp nombre={empleado.nombre} cedula={empleado.cedula} cargo={empleado.cargo} fechaIngreso={fechaIngreso} ubicacion={empleado.ubicacion} directorNombre={config.director_nombre} directorCargo={config.director_cargo} tramite={tramite || "Fines Legales"} hoy={hoy} baseUrl={baseUrl} />;
       } else if (tipo === "ivss") {
         const { default: Comp } = await import("@/components/ConstanciaIVSS");
-        docElement = <Comp nombre={empleado.nombre} cedula={empleado.cedula} cargo={empleado.cargo} fechaIngreso={fechaIngreso} ubicacion={empleado.ubicacion} directorNombre={config.director_nombre} directorCargo={config.director_cargo} tramite={tramite || "Trámite IVSS"} hoy={hoy} />;
+        docElement = <Comp nombre={empleado.nombre} cedula={empleado.cedula} cargo={empleado.cargo} fechaIngreso={fechaIngreso} ubicacion={empleado.ubicacion} directorNombre={config.director_nombre} directorCargo={config.director_cargo} tramite={tramite || "Trámite IVSS"} hoy={hoy} baseUrl={baseUrl} />;
       } else {
         const { default: Comp } = await import("@/components/ConstanciaBanco");
-        docElement = <Comp nombre={empleado.nombre} cedula={empleado.cedula} cargo={empleado.cargo} fechaIngreso={fechaIngreso} ubicacion={empleado.ubicacion} directorNombre={config.director_nombre} directorCargo={config.director_cargo} entidadBancaria={entidad} tramite={tramite || "Trámite bancario"} hoy={hoy} />;
+        docElement = <Comp nombre={empleado.nombre} cedula={empleado.cedula} cargo={empleado.cargo} fechaIngreso={fechaIngreso} ubicacion={empleado.ubicacion} directorNombre={config.director_nombre} directorCargo={config.director_cargo} entidadBancaria={entidad} tramite={tramite || "Trámite bancario"} hoy={hoy} baseUrl={baseUrl} />;
       }
 
       const blob = await pdf(docElement).toBlob();
