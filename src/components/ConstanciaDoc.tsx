@@ -58,11 +58,21 @@ interface Props {
   baseUrl: string;
 }
 
+function infoHoras(tipoPersonal: string, horas: number): { label: string; texto: string } {
+  const esDocente = /^DOC|TSU/i.test(tipoPersonal.trim());
+  const label = esDocente ? "académicas" : "administrativas";
+  if (horas > 0) {
+    return { label, texto: `cumpliendo una carga horaria de ${horas} horas ${label}` };
+  }
+  return { label, texto: `cumpliendo horario ${label}` };
+}
+
 export default function ConstanciaDoc({
   nombre, cedula, tipoPersonal, codigoRac,
   ubicacion, codigoDependencia, fechaIngreso, horasAcademicas,
   diaPalabra, mesPalabra, anio, tramite, baseUrl,
 }: Props) {
+  const { texto: textoHoras } = infoHoras(tipoPersonal, horasAcademicas);
   return (
     <Document>
       <Page size="LETTER" style={s.page}>
@@ -97,8 +107,8 @@ export default function ConstanciaDoc({
             <Text style={s.bold}>Código Número: {codigoRac}</Text>, adscrito(a) a la dependencia:{" "}
             <Text style={s.bold}>{ubicacion}</Text>,{" "}
             <Text style={s.bold}>Código Número: {codigoDependencia || "006561453"}</Text>, con fecha de Ingreso:{" "}
-            <Text style={s.bold}>{fechaIngreso}</Text>, hasta la presente fecha, cumpliendo una carga horaria de{" "}
-            <Text style={s.bold}>{horasAcademicas} horas académicas</Text>. Constancia emitida para {tramite}.
+            <Text style={s.bold}>{fechaIngreso}</Text>, hasta la presente fecha,{" "}
+            <Text style={s.bold}>{textoHoras}</Text>. Constancia emitida para {tramite}.
           </Text>
 
           {/* Fecha en letras */}
