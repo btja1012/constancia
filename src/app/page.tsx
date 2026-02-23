@@ -92,14 +92,7 @@ export default function Home() {
       );
 
       const blob = await pdf(docElement).toBlob();
-      // Use base64 data URL instead of blob URL — required for iOS Safari
-      // (iOS blocks window.open with blob:// URLs)
-      const dataUrl = await new Promise<string>((resolve) => {
-        const reader = new FileReader();
-        reader.onload = () => resolve(reader.result as string);
-        reader.readAsDataURL(blob);
-      });
-      setPdfUrl(dataUrl);
+      setPdfUrl(URL.createObjectURL(blob));
     } catch (e) {
       console.error("Error generando PDF:", e);
       setError("No se pudo generar el PDF. Intenta de nuevo.");
