@@ -15,7 +15,7 @@ const s = StyleSheet.create({
     color: "#000", backgroundColor: "#ffffff",
   },
   imgBox: { width: PW, backgroundColor: "#ffffff" },
-  headerImg: { width: PW, height: 103,  backgroundColor: "#ffffff" },
+  headerImg: { width: PW, height: 87,  backgroundColor: "#ffffff" },
   firmaImg:  { width: PW, height: 160, backgroundColor: "#ffffff" },
   footerImg: { width: PW, height: 169, backgroundColor: "#ffffff" },
 
