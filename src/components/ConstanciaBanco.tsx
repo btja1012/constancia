@@ -8,7 +8,7 @@ const s = StyleSheet.create({
     color: "#111", backgroundColor: "#ffffff",
   },
   imgBox: { width: 612, backgroundColor: "#ffffff" },
-  headerImg: { width: 612, height: 71,  backgroundColor: "#ffffff" },
+  headerImg: { width: 612, height: 103,  backgroundColor: "#ffffff" },
   firmaImg:  { width: 612, height: 238, backgroundColor: "#ffffff" },
   footerImg: { width: 612, height: 169, backgroundColor: "#ffffff" },
 
