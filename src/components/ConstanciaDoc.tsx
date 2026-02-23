@@ -2,9 +2,9 @@
 import { Document, Page, Text, View, StyleSheet, Image } from "@react-pdf/renderer";
 
 // LETTER = 612 × 792 pt. Heights = (imgH / imgW) × 612
-// header.jpeg:      1122×134  → 73pt
-// firma.jpeg:       1280×512  → 245pt
-// footer-wave.jpeg: 1241×342  → 169pt
+// header.png:       1122×130  → 71pt  (cropped black top border)
+// firma.png:        1280×497  → 238pt (cropped black bottom border)
+// footer-wave.png:  1241×342  → 169pt
 
 const PW = 612; // page width in pt
 
@@ -15,8 +15,8 @@ const s = StyleSheet.create({
     color: "#000", backgroundColor: "#ffffff",
   },
   imgBox: { width: PW, backgroundColor: "#ffffff" },
-  headerImg: { width: PW, height: 73,  backgroundColor: "#ffffff" },
-  firmaImg:  { width: PW, height: 245, backgroundColor: "#ffffff" },
+  headerImg: { width: PW, height: 71,  backgroundColor: "#ffffff" },
+  firmaImg:  { width: PW, height: 238, backgroundColor: "#ffffff" },
   footerImg: { width: PW, height: 169, backgroundColor: "#ffffff" },
 
   body: { paddingHorizontal: 52, paddingTop: 18 },
@@ -69,7 +69,7 @@ export default function ConstanciaDoc({
 
         {/* ── HEADER ── */}
         <View style={s.imgBox}>
-          <Image src={`${baseUrl}/logos/header.jpeg`} style={s.headerImg} />
+          <Image src={`${baseUrl}/logos/header.png`} style={s.headerImg} />
         </View>
 
         {/* ── CUERPO ── */}
@@ -112,12 +112,12 @@ export default function ConstanciaDoc({
 
         {/* ── FIRMA ── */}
         <View style={s.imgBox}>
-          <Image src={`${baseUrl}/logos/firma.jpeg`} style={s.firmaImg} />
+          <Image src={`${baseUrl}/logos/firma.png`} style={s.firmaImg} />
         </View>
 
         {/* ── FOOTER OLAS ── */}
         <View style={s.imgBox}>
-          <Image src={`${baseUrl}/logos/footer-wave.jpeg`} style={s.footerImg} />
+          <Image src={`${baseUrl}/logos/footer-wave.png`} style={s.footerImg} />
         </View>
 
       </Page>

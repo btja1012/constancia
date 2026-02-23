@@ -8,8 +8,8 @@ const s = StyleSheet.create({
     color: "#111", backgroundColor: "#ffffff",
   },
   imgBox: { width: 612, backgroundColor: "#ffffff" },
-  headerImg: { width: 612, height: 73,  backgroundColor: "#ffffff" },
-  firmaImg:  { width: 612, height: 245, backgroundColor: "#ffffff" },
+  headerImg: { width: 612, height: 71,  backgroundColor: "#ffffff" },
+  firmaImg:  { width: 612, height: 238, backgroundColor: "#ffffff" },
   footerImg: { width: 612, height: 169, backgroundColor: "#ffffff" },
 
   content: { paddingHorizontal: 48, paddingTop: 16 },
@@ -53,7 +53,7 @@ export default function ConstanciaIVSS({
       <Page size="LETTER" style={s.page}>
 
         <View style={s.imgBox}>
-          <Image src={`${baseUrl}/logos/header.jpeg`} style={s.headerImg} />
+          <Image src={`${baseUrl}/logos/header.png`} style={s.headerImg} />
         </View>
 
         <View style={s.content}>
@@ -82,11 +82,11 @@ export default function ConstanciaIVSS({
         </View>
 
         <View style={s.imgBox}>
-          <Image src={`${baseUrl}/logos/firma.jpeg`} style={s.firmaImg} />
+          <Image src={`${baseUrl}/logos/firma.png`} style={s.firmaImg} />
         </View>
 
         <View style={s.imgBox}>
-          <Image src={`${baseUrl}/logos/footer-wave.jpeg`} style={s.footerImg} />
+          <Image src={`${baseUrl}/logos/footer-wave.png`} style={s.footerImg} />
         </View>
 
       </Page>
