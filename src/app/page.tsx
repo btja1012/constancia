@@ -92,23 +92,22 @@ export default function Home() {
       );
 
       const blob = await pdf(docElement).toBlob();
-      setPdfUrl(URL.createObjectURL(blob));
+      // Use base64 data URL instead of blob URL — required for iOS Safari
+      // (iOS blocks window.open with blob:// URLs)
+      const dataUrl = await new Promise<string>((resolve) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result as string);
+        reader.readAsDataURL(blob);
+      });
+      setPdfUrl(dataUrl);
     } catch (e) {
       console.error("Error generando PDF:", e);
       setError("No se pudo generar el PDF. Intenta de nuevo.");
     } finally { setPdfLoading(false); }
   };
 
-  const descargar = () => {
-    if (!pdfUrl || !empleado) return;
-    const a = document.createElement("a");
-    a.href = pdfUrl;
-    a.download = `Constancia_${tipo.toUpperCase()}_${empleado.cedula}.pdf`;
-    a.click();
-  };
-
   return (
-    <main className="min-h-screen relative overflow-hidden bg-[#0f0f1a] flex items-start justify-center px-4 py-10">
+    <main className="min-h-screen relative overflow-hidden bg-[#0f0f1a] flex items-start justify-center px-4 py-8 sm:py-10">
 
       {/* Orbs animados */}
       <div className="pointer-events-none fixed inset-0 overflow-hidden">
@@ -123,7 +122,7 @@ export default function Home() {
           <div className={`inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-br ${t.from} ${t.to} shadow-lg mb-4 transition-all duration-500 text-2xl`}>
             {t.icon}
           </div>
-          <h1 className="text-3xl font-bold text-white tracking-tight">Constancias</h1>
+          <h1 className="text-2xl sm:text-3xl font-bold text-white tracking-tight">Constancias</h1>
           <p className="text-white/40 text-sm mt-1">CDCE Tovar · Sistema de Documentos</p>
         </div>
 
@@ -268,21 +267,23 @@ export default function Home() {
               <div className="animate-slide-up space-y-2">
                 <p className="text-xs text-center text-emerald-400/80 pb-1">✓ Constancia lista</p>
                 <div className="grid grid-cols-2 gap-2">
-                  <button onClick={() => window.open(pdfUrl, "_blank")}
-                    className="flex items-center justify-center gap-2 bg-white/10 hover:bg-white/20 text-white font-semibold py-3 rounded-xl transition border border-white/10 text-sm">
+                  {/* Ver PDF — abre en nueva pestaña, funciona en iOS y desktop */}
+                  <a href={pdfUrl} target="_blank" rel="noopener noreferrer"
+                    className="flex items-center justify-center gap-2 bg-white/10 active:bg-white/20 text-white font-semibold py-3 rounded-xl transition border border-white/10 text-sm">
                     <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                     </svg>
                     Ver PDF
-                  </button>
-                  <button onClick={descargar}
+                  </a>
+                  {/* Descargar — funciona en desktop; en iOS abre en Safari (pueden usar compartir) */}
+                  <a href={pdfUrl} download={`Constancia_${tipo.toUpperCase()}_${empleado?.cedula}.pdf`}
                     className={`flex items-center justify-center gap-2 bg-gradient-to-r ${t.btn} text-white font-semibold py-3 rounded-xl transition shadow-lg text-sm`}>
                     <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                     </svg>
                     Descargar
-                  </button>
+                  </a>
                 </div>
                 <button onClick={() => setPdfUrl(null)}
                   className="w-full text-white/30 hover:text-white/50 text-xs py-1 transition">
