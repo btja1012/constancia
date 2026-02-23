@@ -3,7 +3,8 @@ import { Document, Page, Text, View, StyleSheet, Image } from "@react-pdf/render
 
 const s = StyleSheet.create({
   page: { paddingTop: 0, paddingBottom: 0, paddingHorizontal: 0, fontSize: 10.5, fontFamily: "Helvetica", lineHeight: 1.55, color: "#111", backgroundColor: "#fff" },
-  headerImg: { width: "100%", height: 72 },
+  imgWrapper: { width: "100%", backgroundColor: "#ffffff" },
+  headerImg: { width: "100%", height: 72, objectFit: "fill", backgroundColor: "#ffffff" },
   content: { paddingHorizontal: 50, paddingTop: 22, paddingBottom: 10, flexGrow: 1 },
   titulo: { textAlign: "center", fontSize: 13, fontFamily: "Helvetica-Bold", textTransform: "uppercase", letterSpacing: 1.5, marginBottom: 18, marginTop: 4 },
   body: { textAlign: "justify", marginBottom: 10, fontSize: 10.5 },
@@ -22,7 +23,7 @@ const s = StyleSheet.create({
   noSello: { fontFamily: "Helvetica-Bold", fontSize: 7.5, textAlign: "center", color: "#333" },
   validaHasta: { fontSize: 7.5, textAlign: "center", color: "#333" },
   aviso: { fontSize: 8, fontFamily: "Helvetica-Oblique", textAlign: "center", color: "#666", marginTop: 6, paddingHorizontal: 50 },
-  footerImg: { width: "100%", height: 80, marginTop: "auto" },
+  footerImg: { width: "100%", height: 80, objectFit: "fill", backgroundColor: "#ffffff" },
 });
 
 interface Props {
@@ -40,7 +41,9 @@ export default function ConstanciaBanco({ nombre, cedula, cargo, fechaIngreso, u
   return (
     <Document>
       <Page size="LETTER" style={s.page}>
-        <Image src={headerUrl} style={s.headerImg} />
+        <View style={s.imgWrapper}>
+          <Image src={headerUrl} style={s.headerImg} />
+        </View>
         <View style={s.content}>
           <Text style={s.titulo}>Constancia de Trabajo{"\n"}(Para Entidad Bancaria)</Text>
 
@@ -92,7 +95,7 @@ export default function ConstanciaBanco({ nombre, cedula, cargo, fechaIngreso, u
           <Text style={s.noSello}>No requiere sello húmedo digital</Text>
           <Text style={s.validaHasta}>Válida hasta: {anio}-12-31</Text>
         </View>
-        <View style={{ marginTop: 20 }}>
+        <View style={{ marginTop: 20, width: "100%", backgroundColor: "#ffffff" }}>
           <Image src={footerUrl} style={s.footerImg} />
         </View>
       </Page>

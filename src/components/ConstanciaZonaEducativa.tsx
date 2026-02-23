@@ -13,7 +13,8 @@ const s = StyleSheet.create({
     backgroundColor: "#fff",
   },
   // Header image
-  headerImg: { width: "100%", height: 72 },
+  imgWrapper: { width: "100%", backgroundColor: "#ffffff" },
+  headerImg: { width: "100%", height: 72, objectFit: "fill", backgroundColor: "#ffffff" },
   // Content area with horizontal padding
   content: { paddingHorizontal: 50, paddingTop: 22, paddingBottom: 10, flexGrow: 1 },
   titulo: {
@@ -50,7 +51,7 @@ const s = StyleSheet.create({
   noSello: { fontFamily: "Helvetica-Bold", fontSize: 7.5, textAlign: "center", color: "#333" },
   validaHasta: { fontSize: 7.5, textAlign: "center", color: "#333" },
   // Footer wave image
-  footerImg: { width: "100%", height: 80, marginTop: "auto" },
+  footerImg: { width: "100%", height: 80, objectFit: "fill", backgroundColor: "#ffffff" },
   footerText: {
     position: "absolute",
     bottom: 16,
@@ -89,7 +90,9 @@ export default function ConstanciaZonaEducativa({
       <Page size="LETTER" style={s.page}>
 
         {/* Header imagen institucional */}
-        <Image src={headerUrl} style={s.headerImg} />
+        <View style={s.imgWrapper}>
+          <Image src={headerUrl} style={s.headerImg} />
+        </View>
 
         {/* Cuerpo del documento */}
         <View style={s.content}>
@@ -135,7 +138,7 @@ export default function ConstanciaZonaEducativa({
         </View>
 
         {/* Footer olas bandera */}
-        <View style={{ marginTop: 20, position: "relative" }}>
+        <View style={{ marginTop: 20, width: "100%", backgroundColor: "#ffffff" }}>
           <Image src={footerUrl} style={s.footerImg} />
         </View>
 
