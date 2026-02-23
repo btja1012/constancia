@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { fechaEnLetras } from "@/lib/fechaEnLetras";
 
-type TipoConstancia = "zona" | "ivss" | "banco";
+type TipoConstancia = "zona" | "ivss" | "banco" | "otro";
 
 interface Empleado {
   nombre: string; cedula: string; cargo: string; fecha_ingreso: string; ubicacion: string;
@@ -15,6 +15,7 @@ const TIPOS = [
   { id: "zona"  as TipoConstancia, label: "Zona Educativa N°14 — Mérida", icon: "🎓", tramite: "Zona Educativa N°14 Mérida", from: "from-blue-600",    to: "to-indigo-600",  ring: "focus:ring-blue-400",   btn: "from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500",       badge: "bg-blue-100 text-blue-700"       },
   { id: "ivss"  as TipoConstancia, label: "IVSS — Mérida",                icon: "🏥", tramite: "IVSS Mérida",                from: "from-emerald-600", to: "to-teal-600",    ring: "focus:ring-emerald-400",btn: "from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500",   badge: "bg-emerald-100 text-emerald-700" },
   { id: "banco" as TipoConstancia, label: "Entidad Bancaria",              icon: "🏦", tramite: "",                           from: "from-violet-600", to: "to-purple-600",  ring: "focus:ring-violet-400", btn: "from-violet-600 to-purple-600 hover:from-violet-500 hover:to-purple-500", badge: "bg-violet-100 text-violet-700"   },
+  { id: "otro"  as TipoConstancia, label: "Otro",                          icon: "✏️", tramite: "",                           from: "from-rose-600",   to: "to-pink-600",    ring: "focus:ring-rose-400",   btn: "from-rose-600 to-pink-600 hover:from-rose-500 hover:to-pink-500",         badge: "bg-rose-100 text-rose-700"       },
 ];
 
 
@@ -23,6 +24,7 @@ export default function Home() {
   const [cedula,     setCedula]     = useState("");
   const [nacimiento, setNacimiento] = useState("");
   const [entidad,    setEntidad]    = useState("");
+  const [otroMotivo, setOtroMotivo] = useState("");
   const [empleado,   setEmpleado]   = useState<Empleado | null>(null);
   const [config,     setConfig]     = useState<Config | null>(null);
   const [error,      setError]      = useState("");
@@ -31,14 +33,17 @@ export default function Home() {
   const [pdfUrl,     setPdfUrl]     = useState<string | null>(null);
 
   const t = TIPOS.find((x) => x.id === tipo)!;
-  // El tramite es el tipo de constancia; para banco es el nombre del banco
-  const tramite = tipo === "banco" ? (entidad || "Entidad Bancaria") : t.tramite;
+  const tramite =
+    tipo === "banco" ? (entidad || "Entidad Bancaria") :
+    tipo === "otro"  ? otroMotivo :
+    t.tramite;
 
   const handleTipo = (val: string) => {
     setTipo(val as TipoConstancia);
     setEmpleado(null);
     setError("");
     setPdfUrl(null);
+    setOtroMotivo("");
   };
 
   const buscar = async () => {
@@ -173,7 +178,7 @@ export default function Home() {
             </div>
           </div>
 
-          {/* Campo banco — solo si es tipo banco */}
+          {/* Campo banco */}
           {tipo === "banco" && (
             <div className="animate-slide-up">
               <label className="block text-sm font-medium text-white/70 mb-1.5">Nombre del Banco</label>
@@ -182,6 +187,20 @@ export default function Home() {
                 value={entidad}
                 onChange={(e) => setEntidad(e.target.value)}
                 placeholder="Ej: Banco de Venezuela"
+                className={`w-full px-4 py-2.5 rounded-xl bg-white/[0.08] border border-white/10 text-white placeholder-white/20 focus:outline-none focus:ring-2 ${t.ring} focus:border-transparent transition`}
+              />
+            </div>
+          )}
+
+          {/* Campo motivo libre — solo si es tipo otro */}
+          {tipo === "otro" && (
+            <div className="animate-slide-up">
+              <label className="block text-sm font-medium text-white/70 mb-1.5">Motivo del Trámite</label>
+              <input
+                type="text"
+                value={otroMotivo}
+                onChange={(e) => setOtroMotivo(e.target.value)}
+                placeholder="Ej: Trámites personales"
                 className={`w-full px-4 py-2.5 rounded-xl bg-white/[0.08] border border-white/10 text-white placeholder-white/20 focus:outline-none focus:ring-2 ${t.ring} focus:border-transparent transition`}
               />
             </div>
