@@ -1,10 +1,4 @@
-"use client";
 import { Document, Page, Text, View, StyleSheet, Image } from "@react-pdf/renderer";
-
-// Dimensiones calculadas al aspect-ratio exacto de cada imagen (page width = 612pt)
-// header.jpeg:    1122×134  → 73pt
-// firma.jpeg:     1280×512  → 245pt
-// footer-wave.jpeg: 1241×342 → 169pt
 
 const s = StyleSheet.create({
   page: {
@@ -12,20 +6,19 @@ const s = StyleSheet.create({
     fontSize: 10.5, fontFamily: "Helvetica", lineHeight: 1.55,
     color: "#111", backgroundColor: "#ffffff",
   },
-  // Contenedor imagen — fondo blanco garantizado, sin padding
-  imgBox: { width: "100%", backgroundColor: "#ffffff" },
-  headerImg:    { width: "100%", height: 73,  objectFit: "fill" },
-  firmaImg:     { width: "100%", height: 245, objectFit: "fill" },
-  footerImg:    { width: "100%", height: 169, objectFit: "fill" },
+  imgBox: { width: 612, backgroundColor: "#ffffff" },
+  headerImg: { width: 612, height: 87,  backgroundColor: "#ffffff" },
+  firmaImg:  { width: 612, height: 160, backgroundColor: "#ffffff" },
+  footerImg: { width: 612, height: 169, backgroundColor: "#ffffff" },
 
-  content: { paddingHorizontal: 48, paddingTop: 16, paddingBottom: 0 },
+  content: { paddingHorizontal: 48, paddingTop: 10 },
   titulo: {
     textAlign: "center", fontSize: 13, fontFamily: "Helvetica-Bold",
-    textTransform: "uppercase", letterSpacing: 1.2, marginBottom: 14,
+    textTransform: "uppercase", letterSpacing: 1.2, marginBottom: 8,
   },
-  body: { textAlign: "justify", marginBottom: 10, fontSize: 10.5 },
+  body: { textAlign: "justify", marginBottom: 7, fontSize: 10.5 },
   bold: { fontFamily: "Helvetica-Bold" },
-  nota: { textAlign: "justify", marginBottom: 10, fontSize: 10.5, fontFamily: "Helvetica-Bold" },
+  nota: { textAlign: "justify", marginBottom: 7, fontSize: 10.5, fontFamily: "Helvetica-Bold" },
 });
 
 interface Props {
@@ -47,7 +40,7 @@ export default function ConstanciaZonaEducativa({
 
         {/* ── HEADER ── */}
         <View style={s.imgBox}>
-          <Image src={`${baseUrl}/logos/header.jpeg`} style={s.headerImg} />
+          <Image src={`${baseUrl}/logos/header.png`} style={s.headerImg} />
         </View>
 
         {/* ── CUERPO ── */}
@@ -77,12 +70,12 @@ export default function ConstanciaZonaEducativa({
 
         {/* ── FIRMA ── */}
         <View style={s.imgBox}>
-          <Image src={`${baseUrl}/logos/firma.jpeg`} style={s.firmaImg} />
+          <Image src={`${baseUrl}/logos/firma.png`} style={s.firmaImg} />
         </View>
 
         {/* ── FOOTER OLAS ── */}
         <View style={s.imgBox}>
-          <Image src={`${baseUrl}/logos/footer-wave.jpeg`} style={s.footerImg} />
+          <Image src={`${baseUrl}/logos/footer-wave.png`} style={s.footerImg} />
         </View>
 
       </Page>

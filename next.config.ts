@@ -1,7 +1,12 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  transpilePackages: ["@react-pdf/renderer"],
+  serverExternalPackages: ["@react-pdf/renderer"],
+  turbopack: {
+    resolveAlias: {
+      canvas: { browser: "./empty-module.js" },
+    },
+  },
   webpack: (config) => {
     config.resolve.alias.canvas = false;
     return config;

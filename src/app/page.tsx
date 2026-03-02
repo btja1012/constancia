@@ -9,7 +9,17 @@ interface Empleado {
   nombre: string; cedula: string; cargo: string; fecha_ingreso: string; ubicacion: string;
   tipo_personal: string; codigo_rac: string; codigo_dependencia: string; horas_academicas: number;
 }
-interface Config   { director_nombre: string; director_cargo: string; institucion: string; }
+interface Config {
+  director_nombre: string;
+  director_cargo: string;
+  institucion: string;
+  director_cedula?: string;
+  director_credencial?: string;
+  institucion_ubicacion?: string;
+  codigo_administrativo?: string;
+  codigo_plantel?: string;
+  codigo_estadistico?: string;
+}
 
 const TIPOS = [
   { id: "zona"  as TipoConstancia, label: "Zona Educativa N°14 — Mérida", icon: "🎓", tramite: "Zona Educativa N°14 Mérida", from: "from-blue-600",    to: "to-indigo-600",  ring: "focus:ring-blue-400",   btn: "from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500",       badge: "bg-blue-100 text-blue-700"       },
@@ -49,6 +59,7 @@ export default function Home() {
   const buscar = async () => {
     setError(""); setEmpleado(null); setPdfUrl(null);
     if (!cedula || !nacimiento) { setError("Ingresa la cédula y fecha de nacimiento."); return; }
+    if (!/^\d+$/.test(cedula.trim())) { setError("La cédula solo puede contener números."); return; }
     setLoading(true);
     try {
       const res  = await fetch("/api/buscar", {
@@ -69,27 +80,90 @@ export default function Home() {
     try {
       const hoyIso = new Date().toISOString().split("T")[0];
       const { dia: diaPalabra, mes: mesPalabra, anio } = fechaEnLetras(hoyIso);
+      const hoy = `${diaPalabra} de ${mesPalabra} de ${anio}`;
       const { pdf } = await import("@react-pdf/renderer");
       const baseUrl = window.location.origin;
 
-      const { default: Comp } = await import("@/components/ConstanciaDoc");
-      const docElement = (
-        <Comp
-          nombre={empleado.nombre}
-          cedula={empleado.cedula}
-          tipoPersonal={empleado.tipo_personal}
-          codigoRac={empleado.codigo_rac}
-          ubicacion={empleado.ubicacion}
-          codigoDependencia={empleado.codigo_dependencia}
-          fechaIngreso={empleado.fecha_ingreso}
-          horasAcademicas={empleado.horas_academicas}
-          diaPalabra={diaPalabra}
-          mesPalabra={mesPalabra}
-          anio={anio}
-          tramite={tramite}
-          baseUrl={baseUrl}
-        />
-      );
+      let docElement;
+
+      if (tipo === "zona") {
+        const { default: Comp } = await import("@/components/ConstanciaZonaEducativa");
+        docElement = (
+          <Comp
+            nombre={empleado.nombre}
+            cedula={empleado.cedula}
+            cargo={empleado.cargo}
+            fechaIngreso={empleado.fecha_ingreso}
+            ubicacion={empleado.ubicacion}
+            directorNombre={config.director_nombre}
+            directorCargo={config.director_cargo}
+            tramite={tramite}
+            hoy={hoy}
+            baseUrl={baseUrl}
+          />
+        );
+      } else if (tipo === "ivss") {
+        const { default: Comp } = await import("@/components/ConstanciaIVSS");
+        docElement = (
+          <Comp
+            nombre={empleado.nombre}
+            cedula={empleado.cedula}
+            cargo={empleado.cargo}
+            fechaIngreso={empleado.fecha_ingreso}
+            ubicacion={empleado.ubicacion}
+            directorNombre={config.director_nombre}
+            directorCargo={config.director_cargo}
+            tramite={tramite}
+            hoy={hoy}
+            baseUrl={baseUrl}
+          />
+        );
+      } else if (tipo === "banco") {
+        const { default: Comp } = await import("@/components/ConstanciaBanco");
+        docElement = (
+          <Comp
+            nombre={empleado.nombre}
+            cedula={empleado.cedula}
+            cargo={empleado.cargo}
+            fechaIngreso={empleado.fecha_ingreso}
+            ubicacion={empleado.ubicacion}
+            directorNombre={config.director_nombre}
+            directorCargo={config.director_cargo}
+            entidadBancaria={entidad}
+            tramite={tramite}
+            hoy={hoy}
+            baseUrl={baseUrl}
+          />
+        );
+      } else {
+        const { default: Comp } = await import("@/components/ConstanciaDoc");
+        docElement = (
+          <Comp
+            nombre={empleado.nombre}
+            cedula={empleado.cedula}
+            tipoPersonal={empleado.tipo_personal}
+            codigoRac={empleado.codigo_rac}
+            ubicacion={empleado.ubicacion}
+            codigoDependencia={empleado.codigo_dependencia}
+            fechaIngreso={empleado.fecha_ingreso}
+            horasAcademicas={empleado.horas_academicas}
+            diaPalabra={diaPalabra}
+            mesPalabra={mesPalabra}
+            anio={anio}
+            tramite={tramite}
+            baseUrl={baseUrl}
+            directorNombre={config.director_nombre}
+            directorCargo={config.director_cargo}
+            directorCedula={config.director_cedula}
+            directorCredencial={config.director_credencial}
+            institucionNombre={config.institucion}
+            institucionUbicacion={config.institucion_ubicacion}
+            codigoAdministrativo={config.codigo_administrativo}
+            codigoPlantel={config.codigo_plantel}
+            codigoEstadistico={config.codigo_estadistico}
+          />
+        );
+      }
 
       const blob = await pdf(docElement).toBlob();
       setPdfUrl(URL.createObjectURL(blob));

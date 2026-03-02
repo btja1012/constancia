@@ -1,4 +1,3 @@
-"use client";
 import { Document, Page, Text, View, StyleSheet, Image } from "@react-pdf/renderer";
 
 const s = StyleSheet.create({
@@ -12,19 +11,19 @@ const s = StyleSheet.create({
   firmaImg:  { width: 612, height: 160, backgroundColor: "#ffffff" },
   footerImg: { width: 612, height: 169, backgroundColor: "#ffffff" },
 
-  content: { paddingHorizontal: 48, paddingTop: 16 },
+  content: { paddingHorizontal: 48, paddingTop: 10 },
   titulo: {
     textAlign: "center", fontSize: 13, fontFamily: "Helvetica-Bold",
-    textTransform: "uppercase", letterSpacing: 1.2, marginBottom: 14,
+    textTransform: "uppercase", letterSpacing: 1.2, marginBottom: 8,
   },
-  body: { textAlign: "justify", marginBottom: 10, fontSize: 10.5 },
+  body: { textAlign: "justify", marginBottom: 7, fontSize: 10.5 },
   bold: { fontFamily: "Helvetica-Bold" },
-  nota: { textAlign: "justify", marginBottom: 10, fontSize: 10.5, fontFamily: "Helvetica-Bold" },
-  tabla: { borderWidth: 0.5, borderColor: "#bbb", marginBottom: 10 },
+  nota: { textAlign: "justify", marginBottom: 7, fontSize: 10.5, fontFamily: "Helvetica-Bold" },
+  tabla: { borderWidth: 0.5, borderColor: "#bbb", marginBottom: 7 },
   fila: { flexDirection: "row", borderBottomWidth: 0.5, borderBottomColor: "#ddd" },
   filaLast: { flexDirection: "row" },
-  celLabel: { fontFamily: "Helvetica-Bold", width: 155, fontSize: 10, padding: 5, borderRightWidth: 0.5, borderRightColor: "#ddd", backgroundColor: "#f5f5f5" },
-  celValue: { flex: 1, fontSize: 10, padding: 5 },
+  celLabel: { fontFamily: "Helvetica-Bold", width: 155, fontSize: 10, padding: 4, borderRightWidth: 0.5, borderRightColor: "#ddd", backgroundColor: "#f5f5f5" },
+  celValue: { flex: 1, fontSize: 10, padding: 4 },
   aviso: { fontSize: 8, fontFamily: "Helvetica-Oblique", textAlign: "center", color: "#666", marginTop: 4 },
 });
 
@@ -36,7 +35,7 @@ interface Props {
 
 export default function ConstanciaBanco({
   nombre, cedula, cargo, fechaIngreso, ubicacion,
-  directorCargo, entidadBancaria, tramite, hoy, baseUrl, ciudad = "Tovar",
+  directorNombre, directorCargo, entidadBancaria, tramite, hoy, baseUrl, ciudad = "Tovar",
 }: Props) {
   const partes = hoy.split(" ");
   const dia = partes[0], mes = partes[2], anio = partes[4];
@@ -68,7 +67,7 @@ export default function ConstanciaBanco({
           </Text>
 
           <Text style={s.body}>
-            {"        "}Quien suscribe, <Text style={s.bold}>{directorCargo}</Text>, se dirige a ustedes en la oportunidad de hacer constar que el(la) ciudadano(a) <Text style={s.bold}>{nombre}</Text>, titular de la Cédula de Identidad Número: <Text style={s.bold}>V-{cedula}</Text>, labora en esta institución con los siguientes datos:
+            {"        "}Quien suscribe, <Text style={s.bold}>{directorNombre}</Text>, en calidad de <Text style={s.bold}>{directorCargo}</Text>, se dirige a ustedes en la oportunidad de hacer constar que el(la) ciudadano(a) <Text style={s.bold}>{nombre}</Text>, titular de la Cédula de Identidad Número: <Text style={s.bold}>V-{cedula}</Text>, labora en esta institución con los siguientes datos:
           </Text>
 
           <View style={s.tabla}>

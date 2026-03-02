@@ -1,4 +1,3 @@
-"use client";
 import { Document, Page, Text, View, StyleSheet, Image } from "@react-pdf/renderer";
 
 // LETTER = 612 × 792 pt. Heights = (imgH / imgW) × 612
@@ -60,6 +59,16 @@ interface Props {
   tramite: string;
   // Imágenes
   baseUrl: string;
+  // Config — director e institución (con fallbacks si no están en DB)
+  directorNombre?: string;
+  directorCargo?: string;
+  directorCedula?: string;
+  directorCredencial?: string;
+  institucionNombre?: string;
+  institucionUbicacion?: string;
+  codigoAdministrativo?: string;
+  codigoPlantel?: string;
+  codigoEstadistico?: string;
 }
 
 function infoHoras(tipoPersonal: string, horas: number): { label: string; texto: string } {
@@ -75,6 +84,15 @@ export default function ConstanciaDoc({
   nombre, cedula, tipoPersonal, codigoRac,
   ubicacion, codigoDependencia, fechaIngreso, horasAcademicas,
   diaPalabra, mesPalabra, anio, tramite, baseUrl,
+  directorNombre = "LCDA. MAYELA COROMOTO MÁRQUEZ ALARCÓN",
+  directorCargo = "Directora (E)",
+  directorCedula = "8.707.544",
+  directorCredencial = "16/09/2024",
+  institucionNombre = 'Escuela "María Yolanda Pernía"',
+  institucionUbicacion = "Urb. San José Parroquia El Llano Tovar Estado Mérida",
+  codigoAdministrativo = "006561453",
+  codigoPlantel = "S2959D1421",
+  codigoEstadistico = "140917",
 }: Props) {
   const { texto: textoHoras } = infoHoras(tipoPersonal, horasAcademicas);
   return (
@@ -92,12 +110,12 @@ export default function ConstanciaDoc({
 
           {/* Párrafo 1 — director */}
           <Text style={s.p}>
-            {"        "}Quien suscribe, <Text style={s.bold}>LCDA. MAYELA COROMOTO MÁRQUEZ ALARCÓN</Text>, portadora de la Cédula de Identidad{" "}
-            <Text style={s.bold}>N° V- 8.707.544</Text>, Directora (E){" "}
-            <Text style={s.bold}>SEGÚN CREDENCIAL DE FECHA: 16/09/2024</Text>, Directora Encargada de la Escuela "María Yolanda Pernía", con sede en la Urb. San José Parroquia El Llano Tovar Estado Mérida. Código Administrativo:{" "}
-            <Text style={s.boldUnder}>006561453</Text>, Código Plantel:{" "}
-            <Text style={s.boldUnder}>S2959D1421</Text>, Código Estadístico{" "}
-            <Text style={s.boldUnder}>140917</Text>.
+            {"        "}Quien suscribe, <Text style={s.bold}>{directorNombre}</Text>, portadora de la Cédula de Identidad{" "}
+            <Text style={s.bold}>N° V- {directorCedula}</Text>, {directorCargo}{" "}
+            <Text style={s.bold}>SEGÚN CREDENCIAL DE FECHA: {directorCredencial}</Text>, Directora Encargada de la {institucionNombre}, con sede en la {institucionUbicacion}. Código Administrativo:{" "}
+            <Text style={s.boldUnder}>{codigoAdministrativo}</Text>, Código Plantel:{" "}
+            <Text style={s.boldUnder}>{codigoPlantel}</Text>, Código Estadístico{" "}
+            <Text style={s.boldUnder}>{codigoEstadistico}</Text>.
           </Text>
 
           <Text style={s.haceConstar}>HACE CONSTAR</Text>
@@ -110,7 +128,7 @@ export default function ConstanciaDoc({
             <Text style={s.bold}>{tipoPersonal}</Text>,{" "}
             <Text style={s.bold}>Código Número: {codigoRac}</Text>, adscrito(a) a la dependencia:{" "}
             <Text style={s.bold}>{ubicacion}</Text>,{" "}
-            <Text style={s.bold}>Código Número: {codigoDependencia || "006561453"}</Text>, con fecha de Ingreso:{" "}
+            <Text style={s.bold}>Código Número: {codigoDependencia || codigoAdministrativo}</Text>, con fecha de Ingreso:{" "}
             <Text style={s.bold}>{fechaIngreso}</Text>, hasta la presente fecha,{" "}
             <Text style={s.bold}>{textoHoras}</Text>. Constancia emitida para {tramite}.
           </Text>
@@ -127,10 +145,10 @@ export default function ConstanciaDoc({
         {/* ── FIRMA (texto) ── */}
         <View style={s.firmaBox}>
           <Text style={s.firmaAtente}>Atentamente:</Text>
-          <Text style={s.firmaNombre}>Lcda. Mayela Coromoto Márquez Alarcón (Esp.)</Text>
-          <Text style={s.firmaInfo}>Directora (E) de la Escuela "María Yolanda Pernía"</Text>
+          <Text style={s.firmaNombre}>{directorNombre}</Text>
+          <Text style={s.firmaInfo}>{directorCargo} de la {institucionNombre}</Text>
           <Text style={s.firmaInfo}>Según credencial, emitida por la DZE.</Text>
-          <Text style={s.firmaInfo}>De fecha 16/09/2024.EMYP/AMSDE/mgc.</Text>
+          <Text style={s.firmaInfo}>De fecha {directorCredencial}.EMYP/AMSDE/mgc.</Text>
           <Text style={s.firmaSello}>SELLO</Text>
         </View>
 

@@ -1,4 +1,3 @@
-"use client";
 import { Document, Page, Text, View, StyleSheet, Image } from "@react-pdf/renderer";
 
 const s = StyleSheet.create({
@@ -12,19 +11,19 @@ const s = StyleSheet.create({
   firmaImg:  { width: 612, height: 160, backgroundColor: "#ffffff" },
   footerImg: { width: 612, height: 169, backgroundColor: "#ffffff" },
 
-  content: { paddingHorizontal: 48, paddingTop: 16 },
+  content: { paddingHorizontal: 48, paddingTop: 10 },
   titulo: {
     textAlign: "center", fontSize: 13, fontFamily: "Helvetica-Bold",
-    textTransform: "uppercase", letterSpacing: 1.2, marginBottom: 14,
+    textTransform: "uppercase", letterSpacing: 1.2, marginBottom: 8,
   },
-  body: { textAlign: "justify", marginBottom: 10, fontSize: 10.5 },
+  body: { textAlign: "justify", marginBottom: 7, fontSize: 10.5 },
   bold: { fontFamily: "Helvetica-Bold" },
-  nota: { textAlign: "justify", marginBottom: 10, fontSize: 10.5, fontFamily: "Helvetica-Bold" },
-  tabla: { borderWidth: 0.5, borderColor: "#bbb", marginBottom: 10 },
+  nota: { textAlign: "justify", marginBottom: 7, fontSize: 10.5, fontFamily: "Helvetica-Bold" },
+  tabla: { borderWidth: 0.5, borderColor: "#bbb", marginBottom: 7 },
   fila: { flexDirection: "row", borderBottomWidth: 0.5, borderBottomColor: "#ddd" },
   filaLast: { flexDirection: "row" },
-  celLabel: { fontFamily: "Helvetica-Bold", width: 155, fontSize: 10, padding: 5, borderRightWidth: 0.5, borderRightColor: "#ddd", backgroundColor: "#f5f5f5" },
-  celValue: { flex: 1, fontSize: 10, padding: 5 },
+  celLabel: { fontFamily: "Helvetica-Bold", width: 155, fontSize: 10, padding: 4, borderRightWidth: 0.5, borderRightColor: "#ddd", backgroundColor: "#f5f5f5" },
+  celValue: { flex: 1, fontSize: 10, padding: 4 },
 });
 
 interface Props {
@@ -35,7 +34,7 @@ interface Props {
 
 export default function ConstanciaIVSS({
   nombre, cedula, cargo, fechaIngreso, ubicacion,
-  directorCargo, tramite, hoy, baseUrl, ciudad = "Tovar",
+  directorNombre, directorCargo, tramite, hoy, baseUrl, ciudad = "Tovar",
 }: Props) {
   const partes = hoy.split(" ");
   const dia = partes[0], mes = partes[2], anio = partes[4];
@@ -60,7 +59,7 @@ export default function ConstanciaIVSS({
           <Text style={s.titulo}>Constancia de Trabajo{"\n"}(Para Trámites ante el IVSS)</Text>
 
           <Text style={s.body}>
-            {"        "}Quien suscribe, <Text style={s.bold}>{directorCargo}</Text>, hace constar que el(la) ciudadano(a) identificado(a) a continuación se encuentra activo(a) en nómina institucional, a los fines de trámites ante el <Text style={s.bold}>Instituto Venezolano de los Seguros Sociales (IVSS)</Text>:
+            {"        "}Quien suscribe, <Text style={s.bold}>{directorNombre}</Text>, en calidad de <Text style={s.bold}>{directorCargo}</Text>, hace constar que el(la) ciudadano(a) identificado(a) a continuación se encuentra activo(a) en nómina institucional, a los fines de trámites ante el <Text style={s.bold}>Instituto Venezolano de los Seguros Sociales (IVSS)</Text>:
           </Text>
 
           <View style={s.tabla}>
