@@ -34,7 +34,7 @@ const s = StyleSheet.create({
     marginBottom: 10,
   },
   firmaAtente: { fontSize: 11, textAlign: "center", marginBottom: 36, marginTop: 10 },
-  firmaNombre: { fontSize: 11, fontFamily: "Helvetica-Bold", textAlign: "center" },
+  firmaNombre: { fontSize: 11, fontFamily: "Helvetica-Bold", textAlign: "center", marginTop: 72 },
   firmaInfo:   { fontSize: 11, textAlign: "center" },
   firmaSello:  { fontSize: 11, fontFamily: "Helvetica-Bold", textAlign: "center", marginTop: 4 },
   footerBox: { position: "absolute", bottom: 52, left: 0, width: PW },
