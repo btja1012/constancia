@@ -37,6 +37,9 @@ const s = StyleSheet.create({
   firmaNombre: { fontSize: 11, fontFamily: "Helvetica-Bold", textAlign: "center" },
   firmaInfo:   { fontSize: 11, textAlign: "center" },
   firmaSello:  { fontSize: 11, fontFamily: "Helvetica-Bold", textAlign: "center", marginTop: 4 },
+  footerBox: { position: "absolute", bottom: 52, left: 0, width: PW },
+  footerTxt: { fontSize: 7.5, fontFamily: "Helvetica-Oblique", textAlign: "center", color: "#222", lineHeight: 1.5 },
+  footerTxtBold: { fontSize: 7.5, fontFamily: "Helvetica-BoldOblique", textAlign: "center", color: "#222", lineHeight: 1.5 },
 });
 
 interface Props {
@@ -133,6 +136,13 @@ export default function ConstanciaDoc({
           <Text style={s.firmaInfo}>Según credencial, emitida por la DZE.</Text>
           <Text style={s.firmaInfo}>De fecha {directorCredencial}.EMYP/AMSDE/mgc.</Text>
           <Text style={s.firmaSello}>SELLO</Text>
+
+          {/* ── FOOTER TEXTO ── */}
+          <View style={s.footerBox}>
+            <Text style={s.footerTxtBold}>"230 Años de Natalicio del Gran Mariscal de Ayacucho Antonio José de Sucre"</Text>
+            <Text style={s.footerTxt}>Escuela Básica "María Yolanda Pernía"  Teléfono 0275-8733459</Text>
+            <Text style={s.footerTxt}>Correo: eb.mariayolandapernia@gmail.com</Text>
+          </View>
         </View>
 
       </Page>
