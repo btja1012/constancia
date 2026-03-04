@@ -1,17 +1,23 @@
 import { Document, Page, Text, View, StyleSheet, Image } from "@react-pdf/renderer";
 
+const PW = 612;
+const PH = 792;
+
 const s = StyleSheet.create({
   page: {
     paddingTop: 0, paddingBottom: 0, paddingHorizontal: 0,
     fontSize: 10.5, fontFamily: "Helvetica", lineHeight: 1.55,
     color: "#111", backgroundColor: "#ffffff",
   },
-  imgBox: { width: 612, backgroundColor: "#ffffff" },
-  headerImg: { width: 612, height: 87,  backgroundColor: "#ffffff" },
-  firmaImg:  { width: 612, height: 160, backgroundColor: "#ffffff" },
-  footerImg: { width: 612, height: 169, backgroundColor: "#ffffff" },
-
-  content: { paddingHorizontal: 48, paddingTop: 10 },
+  bgImg: {
+    position: "absolute", top: 0, left: 0,
+    width: PW, height: PH,
+  },
+  overlay: {
+    position: "absolute", top: 0, left: 0,
+    width: PW, height: PH,
+    paddingTop: 97, paddingHorizontal: 48,
+  },
   titulo: {
     textAlign: "center", fontSize: 13, fontFamily: "Helvetica-Bold",
     textTransform: "uppercase", letterSpacing: 1.2, marginBottom: 8,
@@ -25,6 +31,10 @@ const s = StyleSheet.create({
   celLabel: { fontFamily: "Helvetica-Bold", width: 155, fontSize: 10, padding: 4, borderRightWidth: 0.5, borderRightColor: "#ddd", backgroundColor: "#f5f5f5" },
   celValue: { flex: 1, fontSize: 10, padding: 4 },
   aviso: { fontSize: 8, fontFamily: "Helvetica-Oblique", textAlign: "center", color: "#666", marginTop: 4 },
+  firmaAtente: { fontSize: 10.5, textAlign: "center", marginBottom: 36, marginTop: 10 },
+  firmaNombre: { fontSize: 10.5, fontFamily: "Helvetica-Bold", textAlign: "center" },
+  firmaInfo:   { fontSize: 10.5, textAlign: "center" },
+  firmaSello:  { fontSize: 10.5, fontFamily: "Helvetica-Bold", textAlign: "center", marginTop: 4 },
 });
 
 interface Props {
@@ -53,11 +63,11 @@ export default function ConstanciaBanco({
     <Document>
       <Page size="LETTER" style={s.page}>
 
-        <View style={s.imgBox}>
-          <Image src={`${baseUrl}/logos/header.png`} style={s.headerImg} />
-        </View>
+        {/* 1 — Fondo */}
+        <Image src={`${baseUrl}/logos/template.png`} style={s.bgImg} />
 
-        <View style={s.content}>
+        {/* 2 — Contenido encima */}
+        <View style={s.overlay}>
           <Text style={s.titulo}>Constancia de Trabajo{"\n"}(Para Entidad Bancaria)</Text>
 
           <Text style={s.body}>
@@ -88,14 +98,11 @@ export default function ConstanciaBanco({
           </Text>
 
           <Text style={s.aviso}>Este documento requiere sello húmedo de la institución para su validez.</Text>
-        </View>
 
-        <View style={s.imgBox}>
-          <Image src={`${baseUrl}/logos/firma.png`} style={s.firmaImg} />
-        </View>
-
-        <View style={s.imgBox}>
-          <Image src={`${baseUrl}/logos/footer-wave.png`} style={s.footerImg} />
+          <Text style={s.firmaAtente}>Atentamente:</Text>
+          <Text style={s.firmaNombre}>{directorNombre}</Text>
+          <Text style={s.firmaInfo}>{directorCargo}</Text>
+          <Text style={s.firmaSello}>SELLO</Text>
         </View>
 
       </Page>

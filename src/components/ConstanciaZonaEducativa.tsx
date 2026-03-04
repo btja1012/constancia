@@ -1,17 +1,23 @@
 import { Document, Page, Text, View, StyleSheet, Image } from "@react-pdf/renderer";
 
+const PW = 612;
+const PH = 792;
+
 const s = StyleSheet.create({
   page: {
     paddingTop: 0, paddingBottom: 0, paddingHorizontal: 0,
     fontSize: 10.5, fontFamily: "Helvetica", lineHeight: 1.55,
     color: "#111", backgroundColor: "#ffffff",
   },
-  imgBox: { width: 612, backgroundColor: "#ffffff" },
-  headerImg: { width: 612, height: 87,  backgroundColor: "#ffffff" },
-  firmaImg:  { width: 612, height: 160, backgroundColor: "#ffffff" },
-  footerImg: { width: 612, height: 169, backgroundColor: "#ffffff" },
-
-  content: { paddingHorizontal: 48, paddingTop: 10 },
+  bgImg: {
+    position: "absolute", top: 0, left: 0,
+    width: PW, height: PH,
+  },
+  overlay: {
+    position: "absolute", top: 0, left: 0,
+    width: PW, height: PH,
+    paddingTop: 97, paddingHorizontal: 48,
+  },
   titulo: {
     textAlign: "center", fontSize: 13, fontFamily: "Helvetica-Bold",
     textTransform: "uppercase", letterSpacing: 1.2, marginBottom: 8,
@@ -19,6 +25,10 @@ const s = StyleSheet.create({
   body: { textAlign: "justify", marginBottom: 7, fontSize: 10.5 },
   bold: { fontFamily: "Helvetica-Bold" },
   nota: { textAlign: "justify", marginBottom: 7, fontSize: 10.5, fontFamily: "Helvetica-Bold" },
+  firmaAtente: { fontSize: 10.5, textAlign: "center", marginBottom: 36, marginTop: 10 },
+  firmaNombre: { fontSize: 10.5, fontFamily: "Helvetica-Bold", textAlign: "center" },
+  firmaInfo:   { fontSize: 10.5, textAlign: "center" },
+  firmaSello:  { fontSize: 10.5, fontFamily: "Helvetica-Bold", textAlign: "center", marginTop: 4 },
 });
 
 interface Props {
@@ -38,13 +48,11 @@ export default function ConstanciaZonaEducativa({
     <Document>
       <Page size="LETTER" style={s.page}>
 
-        {/* ── HEADER ── */}
-        <View style={s.imgBox}>
-          <Image src={`${baseUrl}/logos/header.png`} style={s.headerImg} />
-        </View>
+        {/* 1 — Fondo */}
+        <Image src={`${baseUrl}/logos/template.png`} style={s.bgImg} />
 
-        {/* ── CUERPO ── */}
-        <View style={s.content}>
+        {/* 2 — Contenido encima */}
+        <View style={s.overlay}>
           <Text style={s.titulo}>Constancia de Trabajo</Text>
 
           <Text style={s.body}>
@@ -66,16 +74,11 @@ export default function ConstanciaZonaEducativa({
             <Text style={s.bold}>{dia}</Text> días del mes de{" "}
             <Text style={s.bold}>{mes}</Text> del año <Text style={s.bold}>{anio}</Text>.
           </Text>
-        </View>
 
-        {/* ── FIRMA ── */}
-        <View style={s.imgBox}>
-          <Image src={`${baseUrl}/logos/firma.png`} style={s.firmaImg} />
-        </View>
-
-        {/* ── FOOTER OLAS ── */}
-        <View style={s.imgBox}>
-          <Image src={`${baseUrl}/logos/footer-wave.png`} style={s.footerImg} />
+          <Text style={s.firmaAtente}>Atentamente:</Text>
+          <Text style={s.firmaNombre}>{directorNombre}</Text>
+          <Text style={s.firmaInfo}>{directorCargo}</Text>
+          <Text style={s.firmaSello}>SELLO</Text>
         </View>
 
       </Page>
