@@ -45,9 +45,9 @@ const s = StyleSheet.create({
 interface Props {
   nombre: string;
   cedula: string;
+  cargo: string;
   tipoPersonal: string;
   codigoRac: string;
-  ubicacion: string;
   codigoDependencia: string;
   fechaIngreso: string;
   horasAcademicas: number;
@@ -62,33 +62,19 @@ interface Props {
   directorCredencial?: string;
   institucionNombre?: string;
   institucionUbicacion?: string;
-  codigoAdministrativo?: string;
-  codigoPlantel?: string;
-  codigoEstadistico?: string;
-}
-
-function infoHoras(tipoPersonal: string, horas: number) {
-  const esDocente = /^DOC|TSU/i.test(tipoPersonal.trim());
-  const label = esDocente ? "académicas" : "administrativas";
-  if (horas > 0) return `cumpliendo una carga horaria de ${horas} horas ${label}`;
-  return `cumpliendo horario ${label}`;
 }
 
 export default function ConstanciaDoc({
-  nombre, cedula, tipoPersonal, codigoRac,
-  ubicacion, codigoDependencia, fechaIngreso, horasAcademicas,
+  nombre, cedula, cargo, tipoPersonal, codigoRac,
+  codigoDependencia, fechaIngreso, horasAcademicas,
   diaPalabra, mesPalabra, anio, tramite, baseUrl,
   directorNombre = "LCDA. MAYELA COROMOTO MÁRQUEZ ALARCÓN",
   directorCargo = "Directora (E)",
   directorCedula = "8.707.544",
   directorCredencial = "16/09/2024",
   institucionNombre = 'Escuela "María Yolanda Pernía"',
-  institucionUbicacion = "Urb. San José Parroquia El Llano Tovar Estado Mérida",
-  codigoAdministrativo = "006561453",
-  codigoPlantel = "S2959D1421",
-  codigoEstadistico = "140917",
+  institucionUbicacion = "Urb. San José Parroquia El Llano del Municipio Tovar del estado Bolivariano de Mérida",
 }: Props) {
-  const textoHoras = infoHoras(tipoPersonal, horasAcademicas);
   return (
     <Document>
       <Page size="LETTER" style={s.page}>
@@ -103,38 +89,35 @@ export default function ConstanciaDoc({
           <Text style={s.p}>
             {"        "}Quien suscribe, <Text style={s.bold}>{directorNombre}</Text>, portadora de la Cédula de Identidad{" "}
             <Text style={s.bold}>N° V- {directorCedula}</Text>, {directorCargo}{" "}
-            <Text style={s.bold}>SEGÚN CREDENCIAL DE FECHA: {directorCredencial}</Text>, Directora Encargada de la {institucionNombre}, con sede en la {institucionUbicacion}. Código Administrativo:{" "}
-            <Text style={s.boldUnder}>{codigoAdministrativo}</Text>, Código Plantel:{" "}
-            <Text style={s.boldUnder}>{codigoPlantel}</Text>, Código Estadístico{" "}
-            <Text style={s.boldUnder}>{codigoEstadistico}</Text>.
+            <Text style={s.bold}>SEGÚN CREDENCIAL DE FECHA: {directorCredencial}</Text>, Directora Encargada de la {institucionNombre}, con sede en la {institucionUbicacion} del Ministerio del Poder Popular para la Educación.
           </Text>
 
-          <Text style={s.haceConstar}>HACE CONSTAR</Text>
+          <Text style={s.haceConstar}>HACE CONSTAR QUE:</Text>
 
           <Text style={s.p}>
             {"        "}Que el (la) ciudadano (a):{" "}
-            <Text style={s.bold}>{nombre.toUpperCase()}</Text>, titular de la Cédula de Identidad Número:{" "}
-            <Text style={s.bold}>V- {cedula}</Text>, actualmente se desempeña como:{" "}
-            <Text style={s.bold}>{tipoPersonal}</Text>,{" "}
-            <Text style={s.bold}>Código Número: {codigoRac}</Text>, adscrito(a) a la dependencia:{" "}
-            <Text style={s.bold}>{ubicacion}</Text>,{" "}
-            <Text style={s.bold}>Código Número: {codigoDependencia || codigoAdministrativo}</Text>, con fecha de Ingreso:{" "}
-            <Text style={s.bold}>{fechaIngreso}</Text>, hasta la presente fecha,{" "}
-            <Text style={s.bold}>{textoHoras}</Text>. Constancia emitida para {tramite}.
+            <Text style={s.bold}>{nombre.toUpperCase()}</Text>, portador (a) de la cédula de identidad{" "}
+            <Text style={s.bold}>N° {cedula}</Text>, Cargo:{" "}
+            <Text style={s.bold}>{tipoPersonal}</Text> Código:{" "}
+            <Text style={s.bold}>{codigoRac}</Text>, Código de Dependencia{" "}
+            <Text style={s.bold}>{codigoDependencia}</Text>, Ingreso al Ministerio del Poder Popular para la Educación el:{" "}
+            <Text style={s.bold}>{fechaIngreso}</Text>, con una Carga Horaria de:{" "}
+            <Text style={s.bold}>{horasAcademicas} Horas</Text>, cumpliendo Funciones en esta Institución como:{" "}
+            <Text style={s.bold}>{cargo.toUpperCase()}</Text>. La misma se encuentra: <Text style={s.bold}>ACTIVA</Text>.
           </Text>
 
           <Text style={s.p}>
-            {"        "}En <Text style={s.boldUnder}>TOVAR</Text> a los{" "}
-            <Text style={s.boldUnder}>{diaPalabra}</Text> días del mes de{" "}
+            {"        "}Constancia que se expide para Trámites:{" "}
+            <Text style={s.bold}>{tramite.toUpperCase()}</Text>, en Tovar a los{" "}
+            <Text style={s.boldUnder}>{diaPalabra}</Text> del mes de{" "}
             <Text style={s.boldUnder}>{mesPalabra}</Text> de{" "}
             <Text style={s.boldUnder}>{anio}.</Text>
           </Text>
 
-          <Text style={s.firmaAtente}>Atentamente:</Text>
           <Text style={s.firmaNombre}>{directorNombre}</Text>
-          <Text style={s.firmaInfo}>{directorCargo} de la {institucionNombre}</Text>
-          <Text style={s.firmaInfo}>Según credencial, emitida por la DZE.</Text>
-          <Text style={s.firmaInfo}>De fecha {directorCredencial}.EMYP/AMSDE/mgc.</Text>
+          <Text style={s.firmaInfo}>{directorCargo}</Text>
+          <Text style={s.firmaInfo}>Según credencial, De fecha {directorCredencial}.</Text>
+          <Text style={s.firmaInfo}>EMYP/AMSDE/mgc.</Text>
           <Text style={s.firmaSello}>SELLO</Text>
 
           {/* ── FOOTER TEXTO ── */}

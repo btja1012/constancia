@@ -141,9 +141,9 @@ export default function Home() {
           <Comp
             nombre={empleado.nombre}
             cedula={empleado.cedula}
+            cargo={empleado.cargo}
             tipoPersonal={empleado.tipo_personal}
             codigoRac={empleado.codigo_rac}
-            ubicacion={empleado.ubicacion}
             codigoDependencia={empleado.codigo_dependencia}
             fechaIngreso={empleado.fecha_ingreso}
             horasAcademicas={empleado.horas_academicas}
@@ -158,9 +158,6 @@ export default function Home() {
             directorCredencial={config.director_credencial}
             institucionNombre={config.institucion}
             institucionUbicacion={config.institucion_ubicacion}
-            codigoAdministrativo={config.codigo_administrativo}
-            codigoPlantel={config.codigo_plantel}
-            codigoEstadistico={config.codigo_estadistico}
           />
         );
       }
