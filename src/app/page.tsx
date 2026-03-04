@@ -112,19 +112,28 @@ export default function Home() {
           />
         );
       } else if (tipo === "ivss") {
-        const { default: Comp } = await import("@/components/ConstanciaIVSS");
+        const { default: Comp } = await import("@/components/ConstanciaDoc");
         docElement = (
           <Comp
             nombre={empleado.nombre}
             cedula={empleado.cedula}
             cargo={empleado.cargo}
+            tipoPersonal={empleado.tipo_personal}
+            codigoRac={empleado.codigo_rac}
+            codigoDependencia={empleado.codigo_dependencia}
             fechaIngreso={empleado.fecha_ingreso}
-            ubicacion={empleado.ubicacion}
+            horasAcademicas={empleado.horas_academicas}
+            diaPalabra={diaPalabra}
+            mesPalabra={mesPalabra}
+            anio={anio}
+            tramite={tramite}
+            baseUrl={baseUrl}
             directorNombre={config.director_nombre}
             directorCargo={config.director_cargo}
-            tramite={tramite}
-            hoy={hoy}
-            baseUrl={baseUrl}
+            directorCedula={config.director_cedula}
+            directorCredencial={config.director_credencial}
+            institucionNombre={config.institucion}
+            institucionUbicacion={config.institucion_ubicacion}
           />
         );
       } else if (tipo === "banco") {
