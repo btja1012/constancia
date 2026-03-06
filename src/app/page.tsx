@@ -105,8 +105,8 @@ export default function Home() {
             baseUrl={baseUrl}
             directorNombre={config.director_nombre}
             directorCargo={config.director_cargo}
-            directorCedula={config.director_cedula}
-            directorCredencial={config.director_credencial}
+            directorCedula={config.director_cedula ?? undefined}
+            directorCredencial={config.director_credencial ?? undefined}
             institucionNombre={config.institucion}
             institucionUbicacion={config.institucion_ubicacion}
           />
@@ -130,8 +130,8 @@ export default function Home() {
             baseUrl={baseUrl}
             directorNombre={config.director_nombre}
             directorCargo={config.director_cargo}
-            directorCedula={config.director_cedula}
-            directorCredencial={config.director_credencial}
+            directorCedula={config.director_cedula ?? undefined}
+            directorCredencial={config.director_credencial ?? undefined}
             institucionNombre={config.institucion}
             institucionUbicacion={config.institucion_ubicacion}
           />
@@ -172,8 +172,8 @@ export default function Home() {
             baseUrl={baseUrl}
             directorNombre={config.director_nombre}
             directorCargo={config.director_cargo}
-            directorCedula={config.director_cedula}
-            directorCredencial={config.director_credencial}
+            directorCedula={config.director_cedula ?? undefined}
+            directorCredencial={config.director_credencial ?? undefined}
             institucionNombre={config.institucion}
             institucionUbicacion={config.institucion_ubicacion}
           />
