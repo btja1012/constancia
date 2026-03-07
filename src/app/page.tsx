@@ -229,6 +229,7 @@ export default function Home() {
             <label className="block text-sm font-medium text-white/70 mb-1.5">Fecha de Nacimiento</label>
             <input
               type="date"
+              lang="es"
               value={nacimiento}
               onChange={(e) => setNacimiento(e.target.value)}
               className={`w-full px-4 py-2.5 rounded-xl bg-white/[0.08] border border-white/10 text-white/80 focus:outline-none focus:ring-2 ${t.ring} focus:border-transparent transition [color-scheme:dark]`}

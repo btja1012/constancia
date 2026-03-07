@@ -73,7 +73,7 @@ export default function ConstanciaDoc({
   directorCedula = "8.707.544",
   directorCredencial = "16/09/2024",
   institucionNombre = 'Escuela "María Yolanda Pernía"',
-  institucionUbicacion = "Urb. San José Parroquia El Llano del Municipio Tovar del estado Bolivariano de Mérida",
+  institucionUbicacion = "Parroquia El Llano, del municipio de Tovar, del estado de Mérida",
 }: Props) {
   return (
     <Document>
@@ -89,7 +89,7 @@ export default function ConstanciaDoc({
           <Text style={s.p}>
             {"        "}Quien suscribe, <Text style={s.bold}>{directorNombre}</Text>, portadora de la Cédula de Identidad{" "}
             <Text style={s.bold}>N° V- {directorCedula}</Text>, {directorCargo}{" "}
-            <Text style={s.bold}>SEGÚN CREDENCIAL DE FECHA: {directorCredencial}</Text>, Directora Encargada de la {institucionNombre}, con sede en la {institucionUbicacion} del Ministerio del Poder Popular para la Educación.
+            <Text style={s.bold}>SEGÚN CREDENCIAL DE FECHA: {directorCredencial}</Text>, Directora Encargada de la {institucionNombre}, con sede en la {institucionUbicacion}, del Ministerio del Poder Popular para la Educación.
           </Text>
 
           <Text style={s.haceConstar}>HACE CONSTAR QUE:</Text>
